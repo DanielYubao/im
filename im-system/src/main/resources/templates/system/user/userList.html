@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人员列表</title>
+    <link rel="stylesheet" th:href="@{/css/element-ui/index.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/vue/vue.js}"></script>
+    <script th:src="@{/js/element-ui/element.js}"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        .table-container th, .table-container td {
+            text-align: center;
+        }
+
+        .el-dialog__body {
+            padding: 30px;
+        }
+        .el-dialog__wrapper .el-form-item__content {
+            width: 50%;
+        }
+
+        .el-dialog__wrapper .el-form-item__content .el-select {
+            width: 100%;
+        }
+        .el-main{
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="userList" v-cloak>
+    <el-container>
+
+        <el-header>
+            <el-card>
+                <el-form :inline="true" :model="searchFormData" ref="searchForm" size="mini">
+                    <el-form-item label="用户名称" prop="name">
+                        <el-input v-model="searchFormData.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="登陆名称" prop="loginName">
+                        <el-input v-model="searchFormData.loginName"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+                        <el-button icon="el-icon-refresh" @click="resetSearch('searchForm')">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </el-header>
+
+        <el-main>
+            <el-card>
+                <el-row class="global-operate">
+                    <el-button size="mini" type="primary" @click="unloap()" icon="el-icon-plus">文件上传</el-button>
+                    <el-button size="mini" type="primary" @click="testFunction()" icon="el-icon-plus">方法测试</el-button>
+                    <el-button size="mini" type="primary" @click="add()" icon="el-icon-plus">新增</el-button>
+                    <el-button size="mini" type="danger" @click="removeAll()" icon="el-icon-delete">批量删除</el-button>
+                </el-row>
+
+                <el-table
+                        :data="page.list"
+                        ref="multipleTable"
+                        @selection-change="handleSelectionChange"
+                        size="mini" empty-text="抱歉，未查询到相关数据" v-loading="loading" stripe v-if="page && page.list"
+                        class="table-container" width="100%">
+                    <el-table-column type="selection" width="55"></el-table-column>
+                    <el-table-column prop="id" label="用户主键"></el-table-column>
+                    <el-table-column prop="name" label="用户名称"></el-table-column>
+                    <el-table-column prop="loginName" label="登录名称"></el-table-column>
+                    <el-table-column prop="groupName" label="所属组"></el-table-column>
+                    <el-table-column prop="status" label="状态" :formatter="formatterStatus"></el-table-column>
+                    <el-table-column prop="createTime" label="创建时间"></el-table-column>
+                    <el-table-column label="操作" width="300">
+                        <template slot-scope="scope">
+                            <el-button size="mini" plain icon="el-icon-edit-outline" @click="edit(scope.row)">编辑</el-button>
+                            <el-button size="mini" plain icon="el-icon-date" @click="resetPassword(scope.row)">重置</el-button>
+                            <el-button type="mini" plain icon="el-icon-delete" @click="remove(scope.row.id)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-row class="block">
+                    <el-col :xs="24" :sm="24" :md="24">
+                        <div style="text-align:right;padding:10px">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="page.pageNum"
+                                    :page-sizes="[10, 20, 30, 40]"
+                                    :page-size="10"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="page.total">
+                            </el-pagination>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </el-main>
+    </el-container>
+
+
+
+
+
+    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" @closed="handleClose('dialogForm')">
+        <el-form :model="dialogForm" ref="dialogForm" :rules="rules">
+            <el-form-item label="用户名" prop="name" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.name" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="登陆名称" prop="loginName" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.loginName" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" v-if="passwordVisible" prop="password" :label-width="formLabelWidth"  >
+                <el-input v-model="dialogForm.password" type="password" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" v-if="passwordVisible" prop="passwordCheck" :label-width="formLabelWidth"  >
+                <el-input v-model="dialogForm.passwordCheck" type="password" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="所属组" :label-width="formLabelWidth" prop="groupId">
+                <el-select v-model="dialogForm.groupId" filterable placeholder="请选择组别">
+                    <el-option
+                            v-for="item in optionsGroup"
+                            :key="item.id"
+                            :label="item.groupName"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="角色" :label-width="formLabelWidth" prop="roleIds">
+                <el-select v-model="dialogForm.roleIds" filterable multiple placeholder="请选择角色">
+                    <el-option
+                            v-for="item in optionsRole"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="状态" :label-width="formLabelWidth">
+                <el-radio-group v-model="dialogForm.disableFlag">
+                    <el-radio :label="0">正常</el-radio>
+                    <el-radio :label="1">停用</el-radio>
+                </el-radio-group>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false; handleClose('dialogForm')">取 消</el-button>
+            <el-button type="primary" @click="dialogFormSubmit('dialogForm')">确 定</el-button>
+        </div>
+    </el-dialog>
+
+    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisiblePassword" @closed="handleClose('dialogFormPassword')">
+        <el-form :model="dialogFormPassword" ref="dialogFormPassword" :rules="rulePassword">
+            <el-form-item label="登陆名称" prop="loginName" :label-width="formLabelWidth">
+                <el-input v-model="dialogFormPassword.loginName" autocomplete="off" readonly="readonly"></el-input>
+            </el-form-item>
+            <el-form-item label="重置密码" prop="password" :label-width="formLabelWidth"  >
+                <el-input v-model="dialogFormPassword.password" type="password" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="passwordCheck" :label-width="formLabelWidth"  >
+                <el-input v-model="dialogFormPassword.passwordCheck" type="password" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="dialogFormVisiblePassword = false;handleClose('dialogFormPassword')">取 消</el-button>
+            <el-button size="mini" type="primary" @click="dialogFormSubmitPassword('dialogFormPassword')">确 定</el-button>
+        </div>
+    </el-dialog>
+
+
+</div>
+<!--<div th:include="include :: footer"></div>-->
+<script th:inline="javascript"> var ctx = [[@{/}]];</script>
+<script>
+
+    var prefix = ctx + "system/user";
+    var prefix2 = ctx + 'system/group';
+    var prefix3 = ctx + 'system/role';
+    var prefix4 = ctx + "system/dictData";
+    var app = new Vue({
+        el: "#userList",
+        data: function () {
+            var self = this;
+            var validateLoginName = function(rule, value, callback) {
+                if (value && self.dialogForm.oldLoginName != value) {
+                    $.ajax({
+                        url: prefix + "/findByUsername",
+                        method: "POST",
+                        data: {"username": value},
+                        dataType: "json",
+                        async : false,
+                        error: function (request) {
+                            self.$message({
+                                message: '请求出现错误',
+                                type: 'error'
+                            });
+                        },
+                        success: function (response) {
+                            if (response.user != null){
+                                return callback(new Error('该用户名已存在！'));
+                            }
+                        }
+                    });
+                }
+                callback();
+            };
+
+            var validatePassword = function(rule, value, callback) {
+                if (value) {
+                    var reg =  /^(?=.*[0-9].*)(?=.*[A-Z].*)(?=.*[a-z].*).{6,15}$/;
+                    if (!reg.test(value)) {
+                        return callback(new Error('密码应由6-15位的大小写字母、数字组成'));
+                    }
+                }
+                callback();
+            };
+
+            var validatePass2 = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.dialogFormPassword.password) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+
+            var validatePass3 = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.dialogForm.password) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+
+
+            return {
+                statusOptions: null,
+                formLabelWidth: '150px',
+                dialogFormPassword:{
+                    loginName:'',
+                    password:'',
+                    passwordCheck:'',
+                    id:'',
+                },
+                dialogFormVisiblePassword:false,
+                passwordVisible : false,
+                optionsGroup: [],
+                optionsRole: [],
+                searchFormData: {
+                    name: '',
+                    loginName: ''
+                },
+                page: {
+                    pageNum: 1,
+                    pageSize: 10,
+                    total: 0,
+                    list: [],
+                },
+                loading: true,
+                dialogTitle: '',
+                dialogFormVisible: false,
+                dialogForm: {
+                    id:'',
+                    name: '',
+                    loginName: '',
+                    password: '',
+                    passwordCheck: '',
+                    groupId: '',
+                    roleIds: [],
+                    disableFlag:'0',
+                },
+                formLabelWidth: '30%',
+                successMsg: '',
+                dialogFormUrl: '',
+                selectedRows: [],
+                rules: {
+                    name: [
+                        { required: true, message: '请输入用户名', trigger: 'blur' },
+                        { min: 1, max: 10, message: '长度在1到10 个字符', trigger: 'blur' },
+                    ],
+                    loginName: [
+                        { required: true, message: '请输入登录名称', trigger: 'blur'},
+                        { min: 1, max: 30, message: '长度在1到30 个字符', trigger: 'blur' },
+                        { validator: validateLoginName, trigger: 'blur' }
+                    ],
+                    password: [
+                        { required: true, message: '请输入密码', trigger: 'blur'},
+                        { min: 1, max: 20, message: '长度在1到20 个字符', trigger: 'blur' },
+                        { validator: validatePassword, trigger: 'blur' }
+                    ],
+                    passwordCheck: [
+                        { required: true, message: '请输入密码', trigger: 'blur'},
+                        { validator: validatePass3, trigger: 'blur' }
+                    ],
+
+                    groupId: [
+                        { required: true, message: '请选择组别', trigger: 'change' }
+                    ],
+                    roleIds: [
+                        { required: true, message: '请选择角色', trigger: 'change' }
+                    ],
+                },
+                rulePassword: {
+                    password: [
+                        { required: true, message: '请输入密码', trigger: 'blur'},
+                        { validator: validatePassword, trigger: 'blur' }
+                    ],
+                    passwordCheck: [
+                        { required: true, message: '请再次输入密码', trigger: 'blur'},
+                        { validator: validatePass2, trigger: 'blur' }
+                    ],
+                },
+            }
+        },
+        methods: {
+
+            testFunction: function (){
+
+                // var answerDetail = {};
+                // var data = [];
+                // data.push("item1");
+                // data.push("item2");
+                // answerDetail.title = "生成问卷";
+                // answerDetail.functionName = "核算|税务";
+                // answerDetail.financeFunLevel = "财务经理";
+                // answerDetail.data = data;
+                // var saveData = {};
+                // saveData.paperId = "c712dd39-37c3-4141-a6f2-4074d8656dcd";
+                // saveData.startTime = "2019-11-7 17:48:13";
+                // saveData.endTime = "2019-11-7 17:48:33";
+                // saveData.shareId = "38cad994-d5a4-4d68-9c1f-afe26d91c832";
+                // saveData.answerDetail = JSON.stringify({"question1":"item2","question2":"呜呜呜呜","question3":["item1","item2"],"question4":"www"});
+
+                $.ajax({
+                    url: ctx + "system/customerManage/downloadCustomerExcel",
+                    method: "GET",
+                    // data: {paperId:"029e9a4fd7ba4f7796ced41fa2dc7ea5", type:"baseInfo",paperExtends:"name,email"},
+                    // dataType: "json",
+                    error: function (request) {
+                        this.$message.error("请求出现错误！");
+                    },
+                    success: function (response) {
+                        console.info(response);
+                    }
+                });
+
+            },
+
+
+            handleSizeChange: function (val) {
+                if (this.page) {
+                    this.page.pageSize = val;
+                }
+                this.loadData();
+            },
+
+            handleCurrentChange: function (val) {
+                if (this.page) {
+                    this.page.pageNum = val;
+                }
+                this.loadData();
+            },
+            /**
+             * 状态格式化
+             */
+            formatterStatus: function (row) {
+                if(row.disableFlag == '0'){
+                    return "正常";
+                }
+                return "停用";
+            },
+
+
+            search: function () {
+                var _this = this;
+                var queryParam = {};
+                queryParam.pageNum = _this.page.pageNum;
+                queryParam.pageSize = _this.page.pageSize;
+                Object.assign(queryParam, _this.searchFormData);
+                $.ajax({
+                    url: prefix + "/list",
+                    method: "POST",
+                    data: queryParam,
+                    dataType: "json",
+                    error: function (request) {
+                        _this.$message.error("请求出现错误！");
+                    },
+                    success: function (response) {
+                        _this.loading = false;
+                        _this.page.list = response.rows;
+                        _this.page.total = response.total;
+                    }
+                });
+
+            },
+            resetSearch: function(formName) {
+                this.$refs[formName].resetFields();
+            },
+            resetPassword: function (row) {
+                
+                this.dialogTitle = "重置密码"
+                this.dialogFormPassword ={
+                    loginName:row.loginName,
+                    password:'',
+                    id:row.id,
+                };
+                this.dialogFormVisiblePassword = true;
+            },
+            handleSelectionChange: function (array) {
+                this.selectedRows = array;
+            },
+            /**
+             * 添加数据
+             */
+            add: function () {
+                this.passwordVisible=true;
+                this.dialogTitle = '添加人员';
+                this.dialogFormVisible = true;
+                this.dialogFormUrl = prefix + "/add";
+                this.dialogForm = {
+                    name: '',
+                    loginName: '',
+                    password: '',
+                    roleIds: [],
+                    groupId: '',
+                    disableFlag: 0,
+                };
+            },
+
+            /**
+             * 编辑数据
+             */
+            edit: function (row) {
+                var _this = this;
+                console.log(this.optionsRole);
+                _this.dialogTitle = '编辑人员';
+                _this.dialogFormVisible = true;
+                _this.passwordVisible = false;
+                _this.dialogFormUrl = prefix + "/edit";
+                _this.dialogForm = {
+                        id: row.id,
+                        name: row.name,
+                        loginName: row.loginName,
+                        roleIds: [],
+                        groupId: row.groupId,
+                        disableFlag: row.disableFlag,
+                    },
+                _this.dialogForm.oldLoginName = row.loginName;
+                $.ajax({
+                    url: prefix3+"/findByUserId",
+                    method: "POST",
+                    data: {"id": row.id},
+                    dataType: 'json',
+                    async:false,
+                    success: function (response) {
+                        for(var i = 0; i < response.length; i++) {
+                            _this.dialogForm.roleIds[i] = response[i].id;
+                        };
+                    },
+                    error: function (request) {
+                        this.$message.error("请求出现错误");
+                    }
+                });
+
+            },
+
+            /**
+             * 删除数据
+             */
+            remove: function (deleteId) {
+                var _this = this;
+                var deleteids = []
+                deleteids.push(deleteId)
+                this.$confirm('确认要删除该数据吗？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function() {
+                    _this.handleDelete(deleteids);
+                });
+            },
+
+            /**
+             * 批量删除
+             */
+            removeAll: function () {
+                var _this = this;
+                if(this.selectedRows.length > 0){
+                    var ids = [];
+                    this.$confirm('确认要删除选中的' + _this.selectedRows.length +'条数据吗？', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function() {
+                            _this.selectedRows.forEach(function(row){
+                            ids.push(row.id)
+                        });
+                        _this.handleDelete(ids);
+                    });
+                }else {
+                    _this.$message.error("请选中要删除的行！");
+                }
+            },
+
+            handleDelete: function(ids){
+                var _this = this;
+                var data = {
+                    "ids": ids,
+                }
+                $.ajax({
+                    url: prefix + "/remove",
+                    method: "POST",
+                    data:JSON.stringify(data),
+                    contentType: 'application/json',
+                    error: function (request) {
+                        _this.$message.error("请求出现错误");
+                    },
+                    success: function (response) {
+                        _this.$message.success(response.msg);
+                        _this.loadData();
+                    }
+                });
+            },
+
+            /**
+             * 提交新增/编辑的数据
+             */
+            dialogFormSubmit: function (formName) {
+                var _this = this;
+                var obj = {
+                    name: _this.dialogForm.name,
+                    id: _this.dialogForm.id,
+                    loginName: _this.dialogForm.loginName,
+                    password: _this.dialogForm.password,
+                    groupId: _this.dialogForm.groupId,
+                    roleIds: _this.dialogForm.roleIds,
+                    disableFlag: _this.dialogForm.disableFlag,
+                };
+                _this.$refs[formName].validate(function (valid) {
+                    console.log(valid)
+                    if (valid) {
+                        $.ajax({
+                            url: _this.dialogFormUrl,
+                            method: "POST",
+                            data: JSON.stringify(obj),
+                            contentType: 'application/json',
+                            success: function (response) {
+                                _this.loadData();
+                                _this.dialogFormVisible = false;
+                                _this.$message({
+                                    message: response.msg,
+                                    type: 'success'
+                                });
+                            },
+                            error: function (request) {
+                                _this.$message.error("请求出现错误");
+                            }
+                        });
+                    }
+                });
+            },
+
+            /**
+             * 重置密码
+             */
+            dialogFormSubmitPassword: function (formName) {
+                var _this = this;
+                
+                var obj = {
+                    loginName: _this.dialogFormPassword.loginName,
+                    id: _this.dialogFormPassword.id,
+                    password: _this.dialogFormPassword.password,
+                };
+                _this.$refs[formName] && _this.$refs[formName].validate && _this.$refs[formName].validate(function (valid) {
+                    if (valid) {
+                        $.ajax({
+                            url:prefix+"/resetPwd",
+                            method: "POST",
+                            data: JSON.stringify(obj),
+                            contentType: 'application/json',
+                            success: function (response) {
+                                _this.loadData();
+                                _this.dialogFormVisiblePassword = false;
+                                _this.$message({
+                                    message: response.msg,
+                                    type: 'success'
+                                });
+                            },
+                            error: function (request) {
+                                _this.$message.error("请求出现错误");
+                            }
+                        });
+                    }
+                });
+            },
+
+            /**
+             * 获取数据
+             */
+            loadData: function () {
+                var _this = this;
+                var queryParam = {};
+                queryParam.pageNum = this.page.pageNum;
+                queryParam.pageSize = this.page.pageSize;
+                $.ajax({
+                    url: prefix + "/list",
+                    method: "POST",
+                    data: queryParam,
+                    dataType: "json",
+                    error: function (request) {
+                        _this.$message.error("请求出现错误");
+                    },
+                    success: function (response) {
+                        _this.loading = false;
+                        _this.page.list = response.rows;
+                        _this.page.total = response.total;
+                    }
+                });
+            },
+
+            loadGroupData: function () {
+                var _this = this;
+                $.ajax({
+                    url: prefix2 + "/list",
+                    method: "post",
+                    dataType: "json",
+                    error: function (request) {
+                        // this.$message.error("请求出现错误");
+                    },
+                    success: function (res) {
+                        _this.optionsGroup = res.rows
+                    }
+                });
+            },
+
+            loadRoleData: function () {
+                var _this = this;
+                $.ajax({
+                    url: prefix3 + "/list",
+                    method: "post",
+                    dataType: "json",
+                    error: function (request) {
+                        // this.$message.error("请求出现错误");
+                    },
+                    success: function (res) {
+                        _this.optionsRole = res.rows;
+                    }
+                });
+            },
+            handleSizeChange: function (val) {
+                if (this.page) {
+                    this.page.pageSize = val;
+                }
+                this.loadData();
+            },
+            handleCurrentChange: function (val) {
+                if (this.page) {
+                    this.page.pageNum = val;
+                }
+                this.loadData();
+            },
+            handleClose: function(formName){
+                var _this = this;
+                _this.$refs[formName].resetFields();
+            },
+        },
+        mounted: function () {
+            this.loadGroupData();
+            this.loadData();
+            this.loadRoleData();
+        }
+    });
+
+</script>
+</body>
+
+
+</html>

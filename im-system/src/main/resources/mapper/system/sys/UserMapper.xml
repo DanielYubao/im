@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deloitte.system.mapper.sys.UserMapper">
+
+    <resultMap type="User" id="UserResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="loginName"    column="login_name"    />
+        <result property="password"    column="password"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="disableFlag"    column="disable_flag"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+        <result property="groupId"    column="group_id"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="roleId"    column="role_id"    />
+        <result property="roleName"    column="role_name"    />
+    </resultMap>
+
+    <sql id="selectUsersVo">
+        select id, name, login_name, password, create_by, create_time, update_by, update_time, disable_flag, delete_flag from sys_users
+    </sql>
+    <sql id="selectUserRoleGroupVO">
+        SELECT
+            u.id,
+            u.NAME,
+            u.login_name,
+            u.PASSWORD,
+            u.create_by,
+            u.create_time,
+            u.update_by,
+            u.update_time,
+            u.disable_flag,
+            u.delete_flag ,
+            sg.group_name,
+            sg.id group_id
+        FROM
+            sys_users u left join user_group_rel ugr on u.id = ugr.user_id
+            left join sys_groups sg on sg.id = ugr.group_id
+    </sql>
+    <select id="selectUserList" parameterType="User" resultMap="UserResult">
+        <include refid="selectUserRoleGroupVO"/>
+        <where>
+            <if test="id != null "> and u.id = #{id}</if>
+            <if test="name != null  and name != '' "> and instr(u.name, #{name})> 0 </if>
+            <if test="loginName != null  and loginName != '' "> and instr(login_name , #{loginName})> 0 </if>
+            <if test="password != null  and password != '' "> and password = #{password}</if>
+            <if test="createBy != null "> and create_by = #{createBy}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateBy != null "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+            <if test="disableFlag != null "> and disable_flag = #{disableFlag}</if>
+            <if test="deleteFlag != null "> and delete_flag = #{deleteFlag}</if>
+        </where>
+    </select>
+
+    <select id="selectUserById" parameterType="Long" resultMap="UserResult">
+        <include refid="selectUsersVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="name != null  and name != ''  ">name,</if>
+            <if test="loginName != null  and loginName != ''  ">login_name,</if>
+            <if test="password != null  and password != ''  ">password,</if>
+            <if test="createBy != null  ">create_by,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="updateBy != null  ">update_by,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="disableFlag != null  ">disable_flag,</if>
+            <if test="deleteFlag != null  ">delete_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="name != null  and name != ''  ">#{name},</if>
+            <if test="loginName != null  and loginName != ''  ">#{loginName},</if>
+            <if test="password != null  and password != ''  ">#{password},</if>
+            <if test="createBy != null  ">#{createBy},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="updateBy != null  ">#{updateBy},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+            <if test="disableFlag != null  ">#{disableFlag},</if>
+            <if test="deleteFlag != null  ">#{deleteFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateUser" >
+        update sys_users
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="loginName != null  and loginName != ''  ">login_name = #{loginName},</if>
+            <if test="password != null  and password != ''  ">password = #{password},</if>
+            <if test="createBy != null  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="disableFlag != null  ">disable_flag = #{disableFlag},</if>
+            <if test="deleteFlag != null  ">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserById" parameterType="Long">
+        delete from sys_users where id = #{id}
+    </delete>
+
+    <update id="deleteUserByIds" parameterType="Long">
+        update sys_users set delete_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="selectUserByUsername" resultMap="UserResult">
+        <include refid="selectUsersVo"/>
+        where login_name = #{username} and delete_flag = 0
+    </select>
+
+    <update id="updatePassword">
+          update sys_users set password = #{password} where id = #{id}
+    </update>
+
+</mapper>

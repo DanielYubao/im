@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.deloitte.system.mapper.customer.ChannelCustomerInfoEditMapper">
+    <resultMap id="BaseResultMap" type="com.deloitte.system.model.customer.ChannelCustomerInfoEditVO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="customer_code" property="customerCode" jdbcType="VARCHAR"/>
+        <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
+        <result column="contact" property="contact" jdbcType="VARCHAR"/>
+        <result column="contact_info" property="contactInfo" jdbcType="VARCHAR"/>
+        <result column="channel_id" property="channelId" jdbcType="BIGINT"/>
+        <result column="audit_role" property="auditRole" jdbcType="VARCHAR"/>
+        <result column="audit_id" property="auditId" jdbcType="BIGINT"/>
+        <result column="change_type" property="changeType" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="BIGINT"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="disable_flag" property="disableFlag" jdbcType="INTEGER"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="create_name" property="createName" jdbcType="VARCHAR"/>
+        <result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
+        <result column="new_amount_rate" property="newAmountRate" jdbcType="DOUBLE"/>
+        <result column="renew_amount_rate" property="renewAmountRate" jdbcType="DOUBLE"/>
+        <result column="payment_type" property="paymentType" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    c.id, c.customer_code, c.customer_name, c.contact, c.contact_info, c.channel_id, c.audit_role,
+    c.audit_id, c.change_type, c.create_by, c.create_time, c.update_by, c.update_time,
+    c.disable_flag, c.delete_flag, u.name create_name,  ci.channel_name, ci.new_amount_rate, ci.renew_amount_rate, ci.payment_type
+    from channel_customer_info_edit c left join sys_users u on c.create_by = u.id
+    left join channel_info ci on c.channel_id = ci.id
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        where c.id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from channel_customer_info_edit
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.deloitte.system.model.customer.ChannelCustomerInfoEdit">
+    insert into channel_customer_info_edit (id, customer_code, customer_name, 
+      contact, contact_info, channel_id, 
+      audit_role, audit_id, change_type, 
+      create_by, create_time, update_by, 
+      update_time, disable_flag, delete_flag
+      )
+    values (#{id,jdbcType=BIGINT}, #{customerCode,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, 
+      #{contact,jdbcType=VARCHAR}, #{contactInfo,jdbcType=VARCHAR}, #{channelId,jdbcType=BIGINT}, 
+      #{auditRole,jdbcType=VARCHAR}, #{auditId,jdbcType=BIGINT}, #{changeType,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{disableFlag,jdbcType=INTEGER}, #{deleteFlag,jdbcType=INTEGER}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.deloitte.system.model.customer.ChannelCustomerInfoEdit">
+        insert into channel_customer_info_edit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="customerCode != null">
+                customer_code,
+            </if>
+            <if test="customerName != null">
+                customer_name,
+            </if>
+            <if test="contact != null">
+                contact,
+            </if>
+            <if test="contactInfo != null">
+                contact_info,
+            </if>
+            <if test="channelId != null">
+                channel_id,
+            </if>
+            <if test="auditRole != null">
+                audit_role,
+            </if>
+            <if test="auditId != null">
+                audit_id,
+            </if>
+            <if test="changeType != null">
+                change_type,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="disableFlag != null">
+                disable_flag,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="customerCode != null">
+                #{customerCode,jdbcType=VARCHAR},
+            </if>
+            <if test="customerName != null">
+                #{customerName,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null">
+                #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="contactInfo != null">
+                #{contactInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="channelId != null">
+                #{channelId,jdbcType=BIGINT},
+            </if>
+            <if test="auditRole != null">
+                #{auditRole,jdbcType=VARCHAR},
+            </if>
+            <if test="auditId != null">
+                #{auditId,jdbcType=BIGINT},
+            </if>
+            <if test="changeType != null">
+                #{changeType,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=BIGINT},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="disableFlag != null">
+                #{disableFlag,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.deloitte.system.model.customer.ChannelCustomerInfoEdit">
+        update channel_customer_info_edit
+        <set>
+            <if test="customerCode != null">
+                customer_code = #{customerCode,jdbcType=VARCHAR},
+            </if>
+            <if test="customerName != null">
+                customer_name = #{customerName,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null">
+                contact = #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="contactInfo != null">
+                contact_info = #{contactInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="channelId != null">
+                channel_id = #{channelId,jdbcType=BIGINT},
+            </if>
+            <if test="auditRole != null">
+                audit_role = #{auditRole,jdbcType=VARCHAR},
+            </if>
+            <if test="auditId != null">
+                audit_id = #{auditId,jdbcType=BIGINT},
+            </if>
+            <if test="changeType != null">
+                change_type = #{changeType,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=BIGINT},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="disableFlag != null">
+                disable_flag = #{disableFlag,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.deloitte.system.model.customer.ChannelCustomerInfoEdit">
+    update channel_customer_info_edit
+    set customer_code = #{customerCode,jdbcType=VARCHAR},
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      contact_info = #{contactInfo,jdbcType=VARCHAR},
+      channel_id = #{channelId,jdbcType=BIGINT},
+      audit_role = #{auditRole,jdbcType=VARCHAR},
+      audit_id = #{auditId,jdbcType=BIGINT},
+      change_type = #{changeType,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      disable_flag = #{disableFlag,jdbcType=INTEGER},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="selectList" parameterType="com.deloitte.system.model.customer.CustomerInfoEdit"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        <where>
+            and c.delete_flag = 0
+            <if test="customerCode != null and customerCode != '' ">and c.customer_code like
+                concat('%', #{customerCode,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="contactInfo != null and contactInfo != '' ">and c.contact_info like
+                concat('%', #{contactInfo,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="channelId != null and channelId != ''">
+                and c.channel_id = #{channelId,jdbcType=VARCHAR},
+            </if>
+            <if test="auditRole != null and auditRole != ''">
+                and c.audit_role = #{auditRole,jdbcType=VARCHAR}
+            </if>
+            <if test="createBy != null and createBy != '' ">and c.create_by = #{createBy,jdbcType=BIGINT}</if>
+            <if test="changeType != null and changeType != '' ">and c.change_type = #{changeType,jdbcType=VARCHAR}</if>
+        </where>
+
+    </select>
+
+    <delete id="deleteCustomerInfoEdit" parameterType="Long">
+        delete from channel_customer_info_edit where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

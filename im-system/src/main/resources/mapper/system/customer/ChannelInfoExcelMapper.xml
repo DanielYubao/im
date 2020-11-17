@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.deloitte.system.mapper.customer.ChannelInfoExcelMapper">
+    <resultMap id="BaseResultMap" type="com.deloitte.system.model.customer.ChannelInfoExcel">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="channel_name" property="channelName" jdbcType="VARCHAR"/>
+        <result column="contact" property="contact" jdbcType="VARCHAR"/>
+        <result column="contact_info" property="contactInfo" jdbcType="VARCHAR"/>
+        <result column="new_amount_rate" property="newAmountRate" jdbcType="VARCHAR"/>
+        <result column="renew_amount_rate" property="renewAmountRate" jdbcType="VARCHAR"/>
+        <result column="payment_type" property="paymentType" jdbcType="VARCHAR"/>
+        <result column="channel_bank_code" property="channelBankCode" jdbcType="VARCHAR"/>
+        <result column="channel_bank_name" property="channelBankName" jdbcType="VARCHAR"/>
+        <result column="payment_code" property="paymentCode" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="BIGINT"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="validate_msg" property="validateMsg" jdbcType="VARCHAR"/>
+        <result column="validate_flag" property="validateFlag" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, channel_name, contact, contact_info, new_amount_rate, renew_amount_rate, payment_type, 
+    channel_bank_code, channel_bank_name, payment_code, create_by, create_time, update_by, 
+    update_time, validate_msg, validate_flag
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from channel_info_excel
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from channel_info_excel
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.deloitte.system.model.customer.ChannelInfoExcel">
+    insert into channel_info_excel (id, channel_name, contact, 
+      contact_info, new_amount_rate, renew_amount_rate, 
+      payment_type, channel_bank_code, channel_bank_name, 
+      payment_code, create_by, create_time, 
+      update_by, update_time, validate_msg, 
+      validate_flag)
+    values (#{id,jdbcType=BIGINT}, #{channelName,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
+      #{contactInfo,jdbcType=VARCHAR}, #{newAmountRate,jdbcType=VARCHAR}, #{renewAmountRate,jdbcType=VARCHAR}, 
+      #{paymentType,jdbcType=VARCHAR}, #{channelBankCode,jdbcType=VARCHAR}, #{channelBankName,jdbcType=VARCHAR}, 
+      #{paymentCode,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{validateMsg,jdbcType=VARCHAR}, 
+      #{validateFlag,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.deloitte.system.model.customer.ChannelInfoExcel">
+        insert into channel_info_excel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="channelName != null">
+                channel_name,
+            </if>
+            <if test="contact != null">
+                contact,
+            </if>
+            <if test="contactInfo != null">
+                contact_info,
+            </if>
+            <if test="newAmountRate != null">
+                new_amount_rate,
+            </if>
+            <if test="renewAmountRate != null">
+                renew_amount_rate,
+            </if>
+            <if test="paymentType != null">
+                payment_type,
+            </if>
+            <if test="channelBankCode != null">
+                channel_bank_code,
+            </if>
+            <if test="channelBankName != null">
+                channel_bank_name,
+            </if>
+            <if test="paymentCode != null">
+                payment_code,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="validateMsg != null">
+                validate_msg,
+            </if>
+            <if test="validateFlag != null">
+                validate_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="channelName != null">
+                #{channelName,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null">
+                #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="contactInfo != null">
+                #{contactInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="newAmountRate != null">
+                #{newAmountRate,jdbcType=VARCHAR},
+            </if>
+            <if test="renewAmountRate != null">
+                #{renewAmountRate,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentType != null">
+                #{paymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="channelBankCode != null">
+                #{channelBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="channelBankName != null">
+                #{channelBankName,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentCode != null">
+                #{paymentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=BIGINT},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="validateMsg != null">
+                #{validateMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="validateFlag != null">
+                #{validateFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.deloitte.system.model.customer.ChannelInfoExcel">
+        update channel_info_excel
+        <set>
+            <if test="channelName != null">
+                channel_name = #{channelName,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null">
+                contact = #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="contactInfo != null">
+                contact_info = #{contactInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="newAmountRate != null">
+                new_amount_rate = #{newAmountRate,jdbcType=VARCHAR},
+            </if>
+            <if test="renewAmountRate != null">
+                renew_amount_rate = #{renewAmountRate,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentType != null">
+                payment_type = #{paymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="channelBankCode != null">
+                channel_bank_code = #{channelBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="channelBankName != null">
+                channel_bank_name = #{channelBankName,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentCode != null">
+                payment_code = #{paymentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=BIGINT},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="validateMsg != null">
+                validate_msg = #{validateMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="validateFlag != null">
+                validate_flag = #{validateFlag,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.deloitte.system.model.customer.ChannelInfoExcel">
+    update channel_info_excel
+    set channel_name = #{channelName,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      contact_info = #{contactInfo,jdbcType=VARCHAR},
+      new_amount_rate = #{newAmountRate,jdbcType=VARCHAR},
+      renew_amount_rate = #{renewAmountRate,jdbcType=VARCHAR},
+      payment_type = #{paymentType,jdbcType=VARCHAR},
+      channel_bank_code = #{channelBankCode,jdbcType=VARCHAR},
+      channel_bank_name = #{channelBankName,jdbcType=VARCHAR},
+      payment_code = #{paymentCode,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      validate_msg = #{validateMsg,jdbcType=VARCHAR},
+      validate_flag = #{validateFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <delete id="deleteByCreateBy" parameterType="Long">
+    delete from channel_info_excel where create_by = #{createBy,jdbcType=BIGINT}
+  </delete>
+
+    <select id="selectList" parameterType="com.deloitte.system.model.customer.ChannelInfoExcel"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from channel_info_excel
+        <where>
+            <if test="channelName != null and channelName != '' ">and channel_name like concat('%',
+                #{channelName,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="contact != null and contact != '' ">and contact like concat('%', #{contact,jdbcType=VARCHAR},
+                '%')
+            </if>
+            <if test="createBy != null">and create_by = #{createBy,jdbcType=BIGINT}</if>
+            <if test="validateFlag != null">and validate_flag = #{validateFlag,jdbcType=INTEGER}</if>
+        </where>
+    </select>
+
+</mapper>

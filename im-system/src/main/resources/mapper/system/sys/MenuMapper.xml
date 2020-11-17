@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deloitte.system.mapper.sys.MenuMapper">
+
+    <resultMap type="Menu" id="MenuResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="permission" column="permission"/>
+        <result property="url" column="url"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="visible" column="visible"/>
+        <result property="icon" column="icon"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="disableFlag" column="disable_flag"/>
+        <result property="deleteFlag" column="delete_flag"/>
+    </resultMap>
+
+	<sql id="selectMenusVo">
+        select id, name, type, permission, url, order_num, parent_id, visible, icon, create_by, create_time, update_by, update_time, disable_flag, delete_flag from sys_menus
+    </sql>
+
+    <select id="selectMenuList" parameterType="Menu" resultMap="MenuResult">
+        <include refid="selectMenusVo"/>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="name != null  and name != '' ">and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != '' ">and type = #{type}</if>
+            <if test="permission != null  and permission != '' ">and permission = #{permission}</if>
+            <if test="url != null  and url != '' ">and url = #{url}</if>
+            <if test="orderNum != null ">and order_num = #{orderNum}</if>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="visible != null ">and visible = #{visible}</if>
+            <if test="icon != null  and icon != '' ">and icon = #{icon}</if>
+            <if test="createBy != null ">and create_by = #{createBy}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="updateBy != null ">and update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="disableFlag != null ">and disable_flag = #{disableFlag}</if>
+            <if test="deleteFlag != null ">and delete_flag = #{deleteFlag}</if>
+        </where>
+        order by order_num asc
+    </select>
+
+    <select id="selectMenuById" parameterType="Long" resultMap="MenuResult">
+        <include refid="selectMenusVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMenu" parameterType="Menu">
+        insert into sys_menus
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="type != null  and type != ''  ">type,</if>
+			<if test="permission != null  and permission != ''  ">permission,</if>
+			<if test="url != null  and url != ''  ">url,</if>
+			<if test="orderNum != null  ">order_num,</if>
+			<if test="parentId != null  ">parent_id,</if>
+			<if test="visible != null  ">visible,</if>
+			<if test="icon != null  and icon != ''  ">icon,</if>
+			<if test="createBy != null  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="disableFlag != null  ">disable_flag,</if>
+			<if test="deleteFlag != null  ">delete_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="type != null  and type != ''  ">#{type},</if>
+			<if test="permission != null  and permission != ''  ">#{permission},</if>
+			<if test="url != null  and url != ''  ">#{url},</if>
+			<if test="orderNum != null  ">#{orderNum},</if>
+			<if test="parentId != null  ">#{parentId},</if>
+			<if test="visible != null  ">#{visible},</if>
+			<if test="icon != null  and icon != ''  ">#{icon},</if>
+			<if test="createBy != null  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="disableFlag != null  ">#{disableFlag},</if>
+			<if test="deleteFlag != null  ">#{deleteFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMenu" parameterType="Menu">
+        update sys_menus
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="permission != null  and permission != ''  ">permission = #{permission},</if>
+            <if test="url != null  and url != ''  ">url = #{url},</if>
+            <if test="orderNum != null  ">order_num = #{orderNum},</if>
+            <if test="parentId != null  ">parent_id = #{parentId},</if>
+            <if test="visible != null  ">visible = #{visible},</if>
+            <if test="icon != null  and icon != ''  ">icon = #{icon},</if>
+            <if test="createBy != null  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="disableFlag != null  ">disable_flag = #{disableFlag},</if>
+            <if test="deleteFlag != null  ">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMenuById" parameterType="Long">
+        delete from sys_menus where id = #{id}
+    </delete>
+
+    <delete id="deleteMenuByIds" parameterType="Long">
+        delete from sys_menus where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getByRoleId" resultMap="MenuResult">
+       select a.id,a.name from sys_menus a inner join sys_role_menu_rel b on a.id = b. menu_id
+        inner join  sys_roles  c on c.id = b.role_id where c.id = #{roleId} and a.type != 'catalog'
+        and a.disable_flag = 0 and a.delete_flag = 0
+        and c.delete_flag = 0
+    </select>
+
+    <select id="getMenuByUserId" resultMap="MenuResult" parameterType="Long">
+        select distinct m.id, m.name, m.type, m.permission, m.url, m.order_num, m.parent_id, m.visible, m.icon, m.create_by, m.create_time, m.update_by, m.update_time, m.disable_flag, m.delete_flag
+        from sys_menus m
+          inner join sys_role_menu_rel rm on m.id = rm.menu_id
+          inner join sys_user_role_rel ur on ur.role_id = rm.role_id
+          inner join sys_roles r on r.id = ur.role_id
+        where ur.user_id = #{userId} and m.type in('catalog', 'menu') and m.visible=1 and m.delete_flag = 0
+          and r.disable_flag = 0 and r.delete_flag = 0
+        order by m.order_num asc
+    </select>
+
+</mapper>

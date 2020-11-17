@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>销售管理-客户信息</title>
+    <link rel="stylesheet" th:href="@{/css/element-ui/index.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/vue/vue.js}"></script>
+    <script th:src="@{/js/element-ui/element.js}"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .table-container th, .table-container td {
+            text-align: center;
+        }
+        .el-dialog__body {
+            padding: 30px;
+        }
+        .el-dialog__wrapper .el-form-item__content {
+            width: 50%;
+        }
+        .el-dialog__wrapper .el-form-item__content .el-select {
+            width: 100%;
+        }
+        .el-main{
+            margin-top: 20px;
+        }
+        .global-operate {
+            margin-bottom: 20px;
+        }
+        .global-operate .operate-btn {
+            display: inline-block;
+        }
+        .global-operate .operate-btn + .operate-btn {
+            margin-left: 16px;
+        }
+        .error-message {
+            color: #F56C6C;
+            font-size: 12px;
+        }
+        .el-dialog__body {
+            max-height: 68vh;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+<div id="customerList" v-cloak>
+    <el-container>
+        <el-main>
+            <el-card>
+                <el-row class="global-operate">
+                    <el-button size="mini" type="primary" @click="testFun()" class="operate-btn" icon="el-icon-plus">测试方法</el-button>
+                </el-row>
+
+            </el-card>
+        </el-main>
+    </el-container>
+</div>
+
+<script th:inline="javascript"> var ctx = [[@{/}]];</script>
+<script>
+var prefix = ctx + "system";
+
+var app = new Vue({
+    el: "#customerList",
+    methods: {
+
+        testFun() {
+            let _this = this
+            $.ajax({
+                url: prefix + "/paymentRecord/exportPaymentData",
+                method: 'POST',
+                // data: {"customerIds": [1], "targetCreateBy": 1},
+                dataType: 'json',
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    _this.page.pageNum = 1
+                    _this.page.pageSize = 10
+                    _this.loadData()
+                }
+            });
+        }
+    }
+});
+</script>
+</body>
+</html>

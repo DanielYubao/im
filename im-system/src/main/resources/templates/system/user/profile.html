@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人信息</title>
+    <link rel="stylesheet" th:href="@{/css/element-ui/index.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/vue/vue.js}"></script>
+    <script th:src="@{/js/element-ui/element.js}"></script>
+    <script th:src="@{/ruoyi/js/common.js}"></script>
+
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+        div, h5, ul, li, p{
+            margin: 0;
+            padding: 0;
+        }
+        #profile .profile-left{
+            width: 450px;
+        }
+        #profile .profile-left .profile-left-card{
+            min-height: calc(100% - 1px);
+        }
+        #profile .profile-right{
+            width: 100%;
+            margin-left: 10px;
+        }
+        .basic-list > li{
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 14px 0;
+            border-bottom: 1px solid #e7eaec;
+            list-style: none;
+        }
+        .basic-list > li:after{
+            content: '';
+            display: block;
+            clear: both;
+        }
+        .basic-list > li > h5{
+            float: left;
+            font-size: 14px;
+            font-weight: normal;
+        }
+        .basic-list > li > span{
+            float: right;
+            font-size: 14px;
+        }
+        .profile-right-form .el-form-item__content{
+            width: 40%;
+            min-width: 240px;
+        }
+        .profile-right-form .el-form-item__content .el-select{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="profile" v-cloak>
+    <el-container>
+        <div class="profile-left">
+            <el-card class="profile-left-card">
+                <ul class="basic-list">
+                    <li>
+                        <h5>用户名称: </h5>
+                        <span>{{basicMsg.name}}</span>
+                    </li>
+                    <li>
+                        <h5>登录名称: </h5>
+                        <span>{{basicMsg.loginName}}</span>
+                    </li>
+                    <li>
+                        <h5>所属组: </h5>
+                        <span>{{basicMsg.groupName}}</span>
+                    </li>
+                    <li>
+                        <h5>角色: </h5>
+                        <span>{{formatRoleName(basicMsg.roleList)}}</span>
+                    </li>
+                    <li>
+                        <h5>状态: </h5>
+                        <span>{{formatStatus(basicMsg.disableFlag)}}</span>
+                    </li>
+                    <li>
+                        <h5>创建时间: </h5>
+                        <span>{{basicMsg.createTime}}</span>
+                    </li>
+                </ul>
+            </el-card>
+        </div>
+        <div class="profile-right">
+            <el-card>
+                <el-tabs v-model="activeName">
+<!--                    <el-tab-pane label="基本资料" name="basicInfo">-->
+<!--                        <el-form ref="basicInfoForm" :model="basicInfoData" :rules="rules" class="profile-right-form">-->
+<!--                            <el-form-item label="用户名称" :label-width="formLabelWidth" prop="name">-->
+<!--                                <el-input v-model="basicInfoData.name"></el-input>-->
+<!--                            </el-form-item>-->
+<!--                            <el-form-item label="登录名称" :label-width="formLabelWidth" prop="loginName">-->
+<!--                                <el-input v-model="basicInfoData.loginName"></el-input>-->
+<!--                            </el-form-item>-->
+<!--                            <el-form-item label="所属组" :label-width="formLabelWidth" prop="groupId">-->
+<!--                                <el-select v-model="basicInfoData.groupId" filterable placeholder="请选择组别">-->
+<!--                                    <el-option-->
+<!--                                            v-for="item in optionsGroup"-->
+<!--                                            :key="item.id"-->
+<!--                                            :label="item.groupName"-->
+<!--                                            :value="item.id">-->
+<!--                                    </el-option>-->
+<!--                                </el-select>-->
+<!--                            </el-form-item>-->
+<!--                            <el-form-item label="角色" :label-width="formLabelWidth" prop="roleIds">-->
+<!--                                <el-select v-model="basicInfoData.roleIds" filterable multiple placeholder="请选择角色">-->
+<!--                                    <el-option-->
+<!--                                            v-for="item in optionsRole"-->
+<!--                                            :key="item.id"-->
+<!--                                            :label="item.name"-->
+<!--                                            :value="item.id">-->
+<!--                                    </el-option>-->
+<!--                                </el-select>-->
+<!--                            </el-form-item>-->
+<!--                            <el-form-item label="状态" :label-width="formLabelWidth" prop="disableFlag">-->
+<!--                                <el-radio-group v-model="basicInfoData.disableFlag">-->
+<!--                                    <el-radio v-for="item in status" :key="item.code" :label="item.code">{{item.name}}</el-radio>-->
+<!--                                </el-radio-group>-->
+<!--                            </el-form-item>-->
+<!--                            <el-form-item :label-width="formLabelWidth">-->
+<!--                                <el-button size="mini" type="primary" @click="submitForm('basicInfoForm')">确 定</el-button>-->
+<!--                            </el-form-item>-->
+<!--                        </el-form>-->
+<!--                    </el-tab-pane>-->
+                    <el-tab-pane label="修改密码" name="editPwd">
+                        <el-form ref="editPwdForm" :model="editPwdData" :rules="editPwdRules" class="profile-right-form">
+                            <el-form-item label="旧密码" :label-width="formLabelWidth" prop="oldPwd">
+                                <el-input v-model="editPwdData.oldPwd" show-password autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="新密码" :label-width="formLabelWidth" prop="newPwd1">
+                                <el-input v-model="editPwdData.newPwd1" show-password autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="确认密码" :label-width="formLabelWidth" prop="newPwd2">
+                                <el-input v-model="editPwdData.newPwd2" show-password autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item :label-width="formLabelWidth">
+                                <el-button size="mini" type="primary" @click="submitEditPwdForm('editPwdForm')">确 定</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-tab-pane>
+                </el-tabs>
+            </el-card>
+        </div>
+    </el-container>
+</div>
+<script th:inline="javascript"> var ctx = [[@{/}]];</script>
+<script>
+    var userId = [[${id}]];
+    var prefix = ctx + "system/user";
+    new Vue({
+        el: "#profile",
+        data: function () {
+            var self = this;
+            var validateLoginName = function(rule, value, callback) {
+                if (value && self.basicInfoData.oldLoginName != value) {
+                    $.ajax({
+                        url: prefix + "/findByUsername",
+                        method: "POST",
+                        data: {"username": value},
+                        dataType: "json",
+                        async : false,
+                        error: function (request) {
+                            self.$message({
+                                message: '请求出现错误',
+                                type: 'error'
+                            });
+                        },
+                        success: function (response) {
+                            if (response.user != null){
+                                return callback(new Error('该登陆名已存在！'));
+                            }
+                        }
+                    });
+                }
+                callback();
+            };
+            var validatePassword = function(rule, value, callback) {
+                if (value) {
+                    var reg =  /^(?=.*[0-9].*)(?=.*[A-Z].*)(?=.*[a-z].*).{6,15}$/;
+                    if (!reg.test(value)) {
+                        return callback(new Error('密码应由6-15位的大小写字母、数字组成'));
+                    }
+                }
+                callback();
+            };
+            var validatePassword2 = function (rule, value, callback) {
+                if(value){
+                    if(value !== self.editPwdData.newPwd1){
+                        return callback(new Error('两次输入密码不一致'));
+                    }
+                }
+                callback();
+            };
+            var validateOldPwd = function (rule, value, callback) {
+                if (value) {
+                    $.ajax({
+                        url: prefix + '/checkPassword',
+                        method: 'POST',
+                        dataType: 'json',
+                        data: {userId: userId, oldPassword: value},
+                        async: false,
+                        success: function (res) {
+                            if(!res){
+                                return callback(new Error('请输入正确的旧密码'))
+                            }
+                        },
+                        error: function () {
+                            _this.$message.error('请求出现错误');
+                        }
+                    });
+                }
+                callback();
+            }
+            return {
+                basicMsg: {},
+                activeName: 'editPwd',
+                basicInfoData: {
+                    name: '',
+                    loginName: '',
+                    groupId: '',
+                    roleList: [],
+                    disableFlag: ''
+                },
+                optionsGroup: [],
+                status: [
+                    {
+                        code: 0,
+                        name: '正常'
+                    },
+                    {
+                        code: 1,
+                        name: '停用'
+                    }
+                ],
+                editPwdData: {},
+                formLabelWidth: '10%',
+                optionsRole: [],
+                rules: {
+                    name: [
+                        { required: true, message: '请输入用户名', trigger: 'blur' },
+                        { min: 1, max: 10, message: '长度在1到10 个字符', trigger: 'blur' },
+                    ],
+                    loginName: [
+                        { required: true, message: '请输入登录名称', trigger: 'blur'},
+                        { min: 1, max: 30, message: '长度在1到30 个字符', trigger: 'blur' },
+                        { validator: validateLoginName, trigger: 'blur' }
+                    ],
+                    groupId: [
+                        { required: true, message: '请选择组别', trigger: 'change' }
+                    ],
+                    roleIds: [
+                        { required: true, message: '请选择角色', trigger: 'change' }
+                    ]
+                },
+                editPwdRules: {
+                    oldPwd: [
+                        { required: true, message: '请输入旧密码', trigger: 'blur' },
+                        { validator: validateOldPwd, trigger: 'blur' },
+                    ],
+                    newPwd1: [
+                        { required: true, message: '请输入新密码', trigger: 'blur' },
+                        { validator: validatePassword, trigger: 'blur' },
+                    ],
+                    newPwd2: [
+                        { required: true, message: '请确认新密码', trigger: 'blur' },
+                        { validator: validatePassword2, trigger: 'blur' },
+                    ]
+                }
+            }
+        },
+        methods: {
+            getProfile: function () {
+                var _this = this;
+                $.ajax({
+                    url: prefix + '/find',
+                    method: 'post',
+                    data: {'id': userId},
+                    dataType: 'json',
+                    success: function (res) {
+                        _this.basicMsg = res;
+
+                        var basicInfoRes = Object.assign({},res,{
+                            oldLoginName: res.loginName
+                        });
+                        if(res && res.roleList && res.roleList.length > 0) {
+                            var roleIds = _this.formatRoleIds(res.roleList);
+                            Object.assign(basicInfoRes, {
+                                roleIds: roleIds
+                            })
+                        }
+                        _this.basicInfoData = basicInfoRes;
+                        // _this.$refs['basicInfoForm'].resetFields();
+                    },
+                    error: function () {
+                        _this.$message.error('请求出现错误');
+                    }
+                });
+            },
+            formatStatus: function (status) {
+                var result = '';
+                this.status.forEach(function (item) {
+                    if(item.code == status) {
+                        result = item.name;
+                    }
+                });
+                return result;
+            },
+            formatRoleName: function (arr){
+              var roles = [];
+              arr && arr.forEach(function (item) {
+                  roles.push(item.name);
+              });
+              return roles.join(',');
+            },
+            formatRoleIds: function (arr){
+                var ids = [];
+                arr && arr.forEach(function (item) {
+                    ids.push(item.id);
+                });
+                return ids;
+            },
+            loadGroupData: function () {
+                var _this = this;
+                $.ajax({
+                    url: ctx + 'system/group/list',
+                    method: "post",
+                    dataType: "json",
+                    success: function (res) {
+                        _this.optionsGroup = res.rows
+                    },
+                    error: function () {
+                        this.$message.error("请求出现错误");
+                    },
+                });
+            },
+            loadRoleData: function () {
+                var _this = this;
+                $.ajax({
+                    url: ctx + 'system/role/list',
+                    method: "post",
+                    dataType: "json",
+                    error: function (request) {
+                        this.$message.error("请求出现错误");
+                    },
+                    success: function (res) {
+                        _this.optionsRole = res.rows;
+                    }
+                });
+            },
+            submitForm: function (formName) {
+                var _this = this;
+                _this.$refs[formName] && _this.$refs[formName].validate && _this.$refs[formName].validate(function (valid) {
+                    if(valid){
+                        $.ajax({
+                            url: prefix + '/edit' ,
+                            method: "POST",
+                            data: JSON.stringify(_this.basicInfoData),
+                            contentType: 'application/json',
+                            success: function (response) {
+                                _this.getProfile();
+                                _this.$message({
+                                    message: response.msg,
+                                    type: 'success'
+                                });
+                            },
+                            error: function () {
+                                _this.$message.error("请求出现错误");
+                            }
+                        });
+                    }
+                });
+            },
+            submitEditPwdForm: function (formName) {
+                var _this = this;
+                _this.$refs[formName] && _this.$refs[formName].validate && _this.$refs[formName].validate(function (valid) {
+                        if(valid){
+                            var obj = {
+                                id: userId,
+                                password: _this.editPwdData.newPwd1
+                            };
+                            $.ajax({
+                                url: prefix + '/resetPwd' ,
+                                method: "POST",
+                                data: JSON.stringify(obj),
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    _this.$message({
+                                        message: response.msg,
+                                        type: 'success'
+                                    });
+                                },
+                                error: function () {
+                                    _this.$message.error("请求出现错误");
+                                }
+                            });
+                        }
+                });
+            }
+        },
+        mounted: function () {
+            this.getProfile()
+            this.loadGroupData();
+            this.loadRoleData();
+        }
+    });
+</script>
+</body>

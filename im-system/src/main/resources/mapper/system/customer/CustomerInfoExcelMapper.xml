@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.deloitte.system.mapper.customer.CustomerInfoExcelMapper">
+    <resultMap id="BaseResultMap" type="com.deloitte.system.model.customer.CustomerInfoExcel">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="customer_code" property="customerCode" jdbcType="VARCHAR"/>
+        <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
+        <result column="contact" property="contact" jdbcType="VARCHAR"/>
+        <result column="contact_info" property="contactInfo" jdbcType="VARCHAR"/>
+        <result column="new_amount_rate" property="newAmountRate" jdbcType="VARCHAR"/>
+        <result column="renew_amount_rate" property="renewAmountRate" jdbcType="VARCHAR"/>
+        <result column="payment_type" property="paymentType" jdbcType="VARCHAR"/>
+        <result column="customer_bank_code" property="customerBankCode" jdbcType="VARCHAR"/>
+        <result column="customer_bank_name" property="customerBankName" jdbcType="VARCHAR"/>
+        <result column="payment_code" property="paymentCode" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="validate_msg" property="validateMsg" jdbcType="VARCHAR"/>
+        <result column="validate_flag" property="validateFlag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, CAST(AES_DECRYPT(UNHEX(customer_code),'1')as char) customer_code, customer_name, contact, CAST(AES_DECRYPT(UNHEX(contact_info),'1')as char) contact_info,
+    new_amount_rate, renew_amount_rate, payment_type, customer_bank_code, customer_bank_name, payment_code, create_by, create_time, validate_msg, validate_flag
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_info_excel
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from  customer_info_excel
+  </delete>
+
+    <insert id="insert" parameterType="com.deloitte.system.model.customer.CustomerInfoExcel">
+    insert into customer_info_excel (id, customer_code, customer_name,
+      contact, contact_info, new_amount_rate,
+      renew_amount_rate, payment_type, customer_bank_code,
+      customer_bank_name, payment_code, payer_name, create_by,
+      create_time, validate_msg, validate_flag)
+    values (#{id,jdbcType=BIGINT}, HEX(AES_ENCRYPT(#{customerCode,jdbcType=VARCHAR},'1')), #{customerName,jdbcType=VARCHAR},
+      #{contact,jdbcType=VARCHAR}, HEX(AES_ENCRYPT(#{contactInfo,jdbcType=VARCHAR},'1')), #{newAmountRate,jdbcType=VARCHAR},
+      #{renewAmountRate,jdbcType=VARCHAR}, #{paymentType,jdbcType=VARCHAR}, #{customerBankCode,jdbcType=VARCHAR},
+      #{customerBankName,jdbcType=VARCHAR}, #{paymentCode,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT},
+      #{createTime,jdbcType=TIMESTAMP}, #{validateMsg,jdbcType=VARCHAR}, #{validateFlag,jdbcType=INTEGER})
+  </insert>
+
+    <insert id="insertSelective" parameterType="com.deloitte.system.model.customer.CustomerInfoExcel">
+        insert into customer_info_excel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="customerCode != null and customerCode != ''">
+                customer_code,
+            </if>
+            <if test="customerName != null and customerName != ''">
+                customer_name,
+            </if>
+            <if test="contact != null and contact != ''">
+                contact,
+            </if>
+            <if test="contactInfo != null and contactInfo != ''">
+                contact_info,
+            </if>
+            <if test="newAmountRate != null">
+                new_amount_rate,
+            </if>
+            <if test="renewAmountRate != null">
+                renew_amount_rate,
+            </if>
+            <if test="paymentType != null and paymentType != ''">
+                payment_type,
+            </if>
+            <if test="customerBankCode != null and customerBankCode != ''">
+                customer_bank_code,
+            </if>
+            <if test="customerBankName != null and customerBankName != ''">
+                customer_bank_name,
+            </if>
+            <if test="paymentCode != null and paymentCode != ''">
+                payment_code,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="validateMsg != null and validateMsg != ''">
+                validate_msg,
+            </if>
+            <if test="validateFlag != null and validateFlag != ''">
+                validate_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="customerCode != null and customerCode != ''">
+                HEX(AES_ENCRYPT(#{customerCode,jdbcType=VARCHAR},'1')),
+            </if>
+            <if test="customerName != null and customerName != ''">
+                #{customerName,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null and contact != ''">
+                #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="contactInfo != null and contactInfo != ''">
+                HEX(AES_ENCRYPT(#{contactInfo,jdbcType=VARCHAR},'1')),
+            </if>
+            <if test="newAmountRate != null">
+                #{newAmountRate,jdbcType=DOUBLE},
+            </if>
+            <if test="renewAmountRate != null">
+                #{renewAmountRate,jdbcType=DOUBLE},
+            </if>
+            <if test="paymentType != null and paymentType != ''">
+                #{paymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="customerBankCode != null and customerBankCode != ''">
+                #{customerBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="customerBankName != null and customerBankName != ''">
+                #{customerBankName,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentCode != null and paymentCode != ''">
+                #{paymentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="validateMsg != null and validateMsg != ''">
+                #{validateMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="validateFlag != null and validateFlag != ''">
+                #{validateFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKey" parameterType="com.deloitte.system.model.customer.CustomerInfoExcel">
+    update customer_info_excel
+    set customer_code = HEX(AES_ENCRYPT(#{customerCode,jdbcType=VARCHAR},'1')),
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      contact_info = HEX(AES_ENCRYPT(#{contactInfo,jdbcType=VARCHAR},'1')),
+      new_amount_rate = #{newAmountRate,jdbcType=DOUBLE},
+      renew_amount_rate = #{renewAmountRate,jdbcType=DOUBLE},
+      payment_type = #{paymentType,jdbcType=VARCHAR},
+      customer_bank_code = #{customerBankCode,jdbcType=VARCHAR},
+      customer_bank_name = #{customerBankName,jdbcType=VARCHAR},
+      payment_code = #{paymentCode,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      validate_msg = #{validateMsg,jdbcType=VARCHAR},
+      validate_flag = #{validateFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <delete id="deleteByCreateBy" parameterType="Long">
+    delete from customer_info_excel where create_by = #{createBy,jdbcType=BIGINT}
+  </delete>
+
+    <select id="selectList" parameterType="com.deloitte.system.model.customer.CustomerInfoExcel"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from customer_info_excel
+        <where>
+            <if test="customerCode != null and customerCode != '' ">and AES_DECRYPT(UNHEX(customer_code),'1') like
+                concat('%', #{customerCode,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="customerName != null and customerName != '' ">and customer_name like concat('%',
+                #{customerName,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="contact != null and contact != '' ">and contact like concat('%', #{contact,jdbcType=VARCHAR},
+                '%')
+            </if>
+            <if test="contactInfo != null and contactInfo != '' ">and AES_DECRYPT(UNHEX(contact_info),'1') like
+                concat('%', #{contactInfo,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="paymentType != null and paymentType != ''">
+                and payment_type = #{paymentType,jdbcType=VARCHAR},
+            </if>
+            <if test="customerBankCode != null">and customer_bank_code = #{customerBankCode,jdbcType=VARCHAR}</if>
+            <if test="createBy != null">and create_by = #{createBy,jdbcType=BIGINT}</if>
+            <if test="validateFlag != null">and validate_flag = #{validateFlag,jdbcType=INTEGER}</if>
+        </where>
+    </select>
+
+</mapper>

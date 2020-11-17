@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deloitte.system.mapper.sys.RoleMapper">
+    
+    <resultMap type="Role" id="RoleResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="disableFlag"    column="disable_flag"    />
+        <result property="deleteFlag"    column="delete_flag"    />
+    </resultMap>
+	
+	<sql id="selectRoleVo">
+        select id, code, name, create_by, create_time, update_by, update_time, disable_flag, delete_flag from sys_roles
+    </sql>
+	
+    <select id="selectRoleList" parameterType="Role" resultMap="RoleResult">
+        <include refid="selectRoleVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="code != null  and code != '' "> and code = #{code}</if>
+             <if test="name != null  and name != '' "> and instr(name,#{name})> 0 </if>
+             <if test="createBy != null "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="disableFlag != null "> and disable_flag = #{disableFlag}</if>
+             <if test="deleteFlag != null "> and delete_flag = #{deleteFlag}</if>
+         </where>
+    </select>
+    
+    <select id="selectRoleById" parameterType="Long" resultMap="RoleResult">
+        <include refid="selectRoleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRole" parameterType="Role" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_roles
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="code != null  and code != ''  ">code,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="createBy != null  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="disableFlag != null  ">disable_flag,</if>
+			<if test="deleteFlag != null  ">delete_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="code != null  and code != ''  ">#{code},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="createBy != null  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="disableFlag != null  ">#{disableFlag},</if>
+			<if test="deleteFlag != null  ">#{deleteFlag},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateRole" parameterType="Role">
+        update sys_roles
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null  and code != ''  ">code = #{code},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="createBy != null  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="disableFlag != null  ">disable_flag = #{disableFlag},</if>
+            <if test="deleteFlag != null  ">delete_flag = #{deleteFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<update id="deleteRoleById" parameterType="Long">
+        update  sys_roles set delete_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+	
+    <update id="deleteRoleByIds" parameterType="Long">
+        update  sys_roles set delete_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="selectRoleByUserId" resultMap="RoleResult">
+        SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id
+       inner join sys_roles c on b.role_id = c.id where a.id = #{userId}
+    </select>
+
+
+    <select id="findRoleListByNameOrCode" parameterType="Role" resultMap="RoleResult">
+        <include refid="selectRoleVo"/>
+        <where>
+            <if test="code != null  and code != '' "> and code = #{code}</if>
+            <if test="name != null  and name != '' "> and name=#{name}</if>
+            and delete_flag = 0
+            and disable_flag = 0
+        </where>
+    </select>
+
+    <select id="selectRoleByIdForDelete" resultMap="RoleResult">
+select a.code, a.`name` from sys_roles a  inner join sys_user_role_rel b on a.id = b.role_id where b.role_id = #{id} limit 1;
+    </select>
+</mapper>

@@ -1,0 +1,988 @@
+2020-11-17 11:19:52.049 |-INFO  [main] com.deloitte.InformationManageApplication [50] -| Starting InformationManageApplication on CNPC0SFXTC with PID 16464 (D:\workspace\Idea_workspace\customer_manage\im\im-system\target\classes started by dqiao in D:\workspace\Idea_workspace\customer_manage\im)
+2020-11-17 11:19:52.057 |-INFO  [main] com.deloitte.InformationManageApplication [675] -| No active profile set, falling back to default profiles: default
+2020-11-17 11:20:03.299 |-INFO  [main] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [90] -| Tomcat initialized with port(s): 8088 (http)
+2020-11-17 11:20:03.347 |-INFO  [main] org.apache.coyote.http11.Http11NioProtocol [173] -| Initializing ProtocolHandler ["http-nio-8088"]
+2020-11-17 11:20:03.381 |-INFO  [main] org.apache.catalina.core.StandardService [173] -| Starting service [Tomcat]
+2020-11-17 11:20:03.382 |-INFO  [main] org.apache.catalina.core.StandardEngine [173] -| Starting Servlet engine: [Apache Tomcat/9.0.17]
+2020-11-17 11:20:04.004 |-INFO  [main] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/survey/dev/im] [173] -| Initializing Spring embedded WebApplicationContext
+2020-11-17 11:20:04.005 |-INFO  [main] org.springframework.web.context.ContextLoader [296] -| Root WebApplicationContext: initialization completed in 11825 ms
+2020-11-17 11:20:09.952 |-INFO  [main] com.deloitte.framework.security.provisioning.CustomerJdbcUserDetailsManager [138] -| No authentication manager set. Reauthentication of users when changing passwords will not be performed.
+2020-11-17 11:20:10.489 |-INFO  [main] org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor [171] -| Initializing ExecutorService 'applicationTaskExecutor'
+2020-11-17 11:20:12.165 |-INFO  [main] org.springframework.security.web.DefaultSecurityFilterChain [43] -| Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4bce62b, org.springframework.security.web.context.SecurityContextPersistenceFilter@1a2773a8, org.springframework.security.web.header.HeaderWriterFilter@2b441e56, org.springframework.security.web.authentication.logout.LogoutFilter@33bdd01, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@4e974b9e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@46612bfc, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@28daf506, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7bf018dd, org.springframework.security.web.session.SessionManagementFilter@3a109ff7, org.springframework.security.web.access.ExceptionTranslationFilter@54326e9, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7ab63838]
+2020-11-17 11:20:12.886 |-INFO  [main] org.apache.coyote.http11.Http11NioProtocol [173] -| Starting ProtocolHandler ["http-nio-8088"]
+2020-11-17 11:20:12.984 |-INFO  [main] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [204] -| Tomcat started on port(s): 8088 (http) with context path '/survey/dev/im'
+2020-11-17 11:20:12.992 |-INFO  [main] com.deloitte.InformationManageApplication [59] -| Started InformationManageApplication in 22.748 seconds (JVM running for 25.867)
+2020-11-17 11:26:41.018 |-INFO  [http-nio-8088-exec-1] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/survey/dev/im] [173] -| Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-11-17 11:26:41.019 |-INFO  [http-nio-8088-exec-1] org.springframework.web.servlet.DispatcherServlet [524] -| Initializing Servlet 'dispatcherServlet'
+2020-11-17 11:26:41.039 |-INFO  [http-nio-8088-exec-1] org.springframework.web.servlet.DispatcherServlet [546] -| Completed initialization in 20 ms
+2020-11-17 11:26:53.349 |-INFO  [http-nio-8088-exec-1] com.zaxxer.hikari.HikariDataSource [110] -| HikariPool-1 - Starting...
+2020-11-17 11:27:15.620 |-ERROR [http-nio-8088-exec-1] com.zaxxer.hikari.pool.HikariPool [574] -| HikariPool-1 - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:835)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:455)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:240)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:199)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:136)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:369)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:198)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:467)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:541)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:157)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:115)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:78)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:611)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:668)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:699)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:711)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:762)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUsersByUsername(JdbcDaoImpl.java:227)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUserByUsername(JdbcDaoImpl.java:184)
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:108)
+	at org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:144)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:175)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:200)
+	at org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.attemptAuthentication(UsernamePasswordAuthenticationFilter.java:94)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:212)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:74)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:92)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:200)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:490)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:408)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:834)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1415)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:91)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:152)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:955)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 75 common frames omitted
+Caused by: java.net.ConnectException: Connection timed out: connect
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:85)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:606)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:155)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:65)
+	... 78 common frames omitted
+2020-11-17 11:27:15.620 |-INFO  [http-nio-8088-exec-4] com.zaxxer.hikari.HikariDataSource [110] -| HikariPool-1 - Starting...
+2020-11-17 11:27:15.620 |-ERROR [http-nio-8088-exec-1] org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter [221] -| An internal error occurred while trying to authenticate the user.
+org.springframework.security.authentication.InternalAuthenticationServiceException: Failed to obtain JDBC Connection; nested exception is com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:123)
+	at org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:144)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:175)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:200)
+	at org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.attemptAuthentication(UsernamePasswordAuthenticationFilter.java:94)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:212)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:74)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:92)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:200)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:490)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:408)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:834)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1415)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.springframework.jdbc.CannotGetJdbcConnectionException: Failed to obtain JDBC Connection; nested exception is com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:81)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:611)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:668)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:699)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:711)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:762)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUsersByUsername(JdbcDaoImpl.java:227)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUserByUsername(JdbcDaoImpl.java:184)
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:108)
+	... 54 common frames omitted
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:835)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:455)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:240)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:199)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:136)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:369)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:198)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:467)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:541)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:157)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:115)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:78)
+	... 62 common frames omitted
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:91)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:152)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:955)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 75 common frames omitted
+Caused by: java.net.ConnectException: Connection timed out: connect
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:85)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:606)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:155)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:65)
+	... 78 common frames omitted
+2020-11-17 11:27:37.626 |-ERROR [http-nio-8088-exec-4] com.zaxxer.hikari.pool.HikariPool [574] -| HikariPool-1 - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:835)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:455)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:240)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:199)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:136)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:369)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:198)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:467)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:541)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:157)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:115)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:78)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:611)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:668)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:699)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:711)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:762)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUsersByUsername(JdbcDaoImpl.java:227)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUserByUsername(JdbcDaoImpl.java:184)
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:108)
+	at org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:144)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:175)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:200)
+	at org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.attemptAuthentication(UsernamePasswordAuthenticationFilter.java:94)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:212)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:74)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:92)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:200)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:490)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:408)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:834)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1415)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:91)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:152)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:955)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 75 common frames omitted
+Caused by: java.net.ConnectException: Connection timed out: connect
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:85)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:606)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:155)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:65)
+	... 78 common frames omitted
+2020-11-17 11:27:37.629 |-ERROR [http-nio-8088-exec-4] org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter [221] -| An internal error occurred while trying to authenticate the user.
+org.springframework.security.authentication.InternalAuthenticationServiceException: Failed to obtain JDBC Connection; nested exception is com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:123)
+	at org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:144)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:175)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:200)
+	at org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.attemptAuthentication(UsernamePasswordAuthenticationFilter.java:94)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:212)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:74)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:92)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:200)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:490)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:408)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:834)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1415)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.springframework.jdbc.CannotGetJdbcConnectionException: Failed to obtain JDBC Connection; nested exception is com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:81)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:611)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:668)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:699)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:711)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:762)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUsersByUsername(JdbcDaoImpl.java:227)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUserByUsername(JdbcDaoImpl.java:184)
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:108)
+	... 54 common frames omitted
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:835)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:455)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:240)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:199)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:136)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:369)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:198)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:467)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:541)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:157)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:115)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:78)
+	... 62 common frames omitted
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:91)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:152)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:955)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 75 common frames omitted
+Caused by: java.net.ConnectException: Connection timed out: connect
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:85)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:606)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:155)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:65)
+	... 78 common frames omitted
+2020-11-17 11:28:22.349 |-INFO  [http-nio-8088-exec-7] com.zaxxer.hikari.HikariDataSource [110] -| HikariPool-1 - Starting...
+2020-11-17 11:28:44.356 |-ERROR [http-nio-8088-exec-7] com.zaxxer.hikari.pool.HikariPool [574] -| HikariPool-1 - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:835)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:455)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:240)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:199)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:136)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:369)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:198)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:467)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:541)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:157)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:115)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:78)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:611)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:668)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:699)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:711)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:762)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUsersByUsername(JdbcDaoImpl.java:227)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUserByUsername(JdbcDaoImpl.java:184)
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:108)
+	at org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:144)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:175)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:200)
+	at org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.attemptAuthentication(UsernamePasswordAuthenticationFilter.java:94)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:212)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:74)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:92)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:200)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:490)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:408)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:834)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1415)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:91)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:152)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:955)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 75 common frames omitted
+Caused by: java.net.ConnectException: Connection timed out: connect
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:85)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:606)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:155)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:65)
+	... 78 common frames omitted
+2020-11-17 11:28:44.358 |-ERROR [http-nio-8088-exec-7] org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter [221] -| An internal error occurred while trying to authenticate the user.
+org.springframework.security.authentication.InternalAuthenticationServiceException: Failed to obtain JDBC Connection; nested exception is com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:123)
+	at org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:144)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:175)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:200)
+	at org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.attemptAuthentication(UsernamePasswordAuthenticationFilter.java:94)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:212)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:74)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:92)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:200)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:490)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:408)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:834)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1415)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.springframework.jdbc.CannotGetJdbcConnectionException: Failed to obtain JDBC Connection; nested exception is com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:81)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:611)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:668)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:699)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:711)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:762)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUsersByUsername(JdbcDaoImpl.java:227)
+	at org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl.loadUserByUsername(JdbcDaoImpl.java:184)
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:108)
+	... 54 common frames omitted
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:835)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:455)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:240)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:199)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:136)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:369)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:198)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:467)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:541)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:157)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:115)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:78)
+	... 62 common frames omitted
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:91)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:152)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:955)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 75 common frames omitted
+Caused by: java.net.ConnectException: Connection timed out: connect
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:85)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:606)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:155)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:65)
+	... 78 common frames omitted
+2020-11-17 11:33:01.534 |-INFO  [Thread-3] org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor [208] -| Shutting down ExecutorService 'applicationTaskExecutor'
+2020-11-17 11:33:11.465 |-INFO  [main] com.deloitte.InformationManageApplication [50] -| Starting InformationManageApplication on CNPC0SFXTC with PID 18108 (D:\workspace\Idea_workspace\customer_manage\im\im-system\target\classes started by dqiao in D:\workspace\Idea_workspace\customer_manage\im)
+2020-11-17 11:33:11.476 |-INFO  [main] com.deloitte.InformationManageApplication [675] -| No active profile set, falling back to default profiles: default
+2020-11-17 11:33:23.388 |-INFO  [main] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [90] -| Tomcat initialized with port(s): 8088 (http)
+2020-11-17 11:33:23.423 |-INFO  [main] org.apache.coyote.http11.Http11NioProtocol [173] -| Initializing ProtocolHandler ["http-nio-8088"]
+2020-11-17 11:33:23.447 |-INFO  [main] org.apache.catalina.core.StandardService [173] -| Starting service [Tomcat]
+2020-11-17 11:33:23.448 |-INFO  [main] org.apache.catalina.core.StandardEngine [173] -| Starting Servlet engine: [Apache Tomcat/9.0.17]
+2020-11-17 11:33:24.050 |-INFO  [main] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/survey/dev/im] [173] -| Initializing Spring embedded WebApplicationContext
+2020-11-17 11:33:24.051 |-INFO  [main] org.springframework.web.context.ContextLoader [296] -| Root WebApplicationContext: initialization completed in 12404 ms
+2020-11-17 11:33:30.315 |-INFO  [main] com.deloitte.framework.security.provisioning.CustomerJdbcUserDetailsManager [138] -| No authentication manager set. Reauthentication of users when changing passwords will not be performed.
+2020-11-17 11:33:31.145 |-INFO  [main] org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor [171] -| Initializing ExecutorService 'applicationTaskExecutor'
+2020-11-17 11:33:33.832 |-INFO  [main] org.springframework.security.web.DefaultSecurityFilterChain [43] -| Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6c9a3661, org.springframework.security.web.context.SecurityContextPersistenceFilter@7f42b194, org.springframework.security.web.header.HeaderWriterFilter@200d1a3d, org.springframework.security.web.authentication.logout.LogoutFilter@6d969330, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7b3cbe6e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@29170a47, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7c4b5ceb, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@727986ad, org.springframework.security.web.session.SessionManagementFilter@12567179, org.springframework.security.web.access.ExceptionTranslationFilter@7f12094d, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@13e00016]
+2020-11-17 11:33:34.127 |-INFO  [main] org.apache.coyote.http11.Http11NioProtocol [173] -| Starting ProtocolHandler ["http-nio-8088"]
+2020-11-17 11:33:34.237 |-INFO  [main] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [204] -| Tomcat started on port(s): 8088 (http) with context path '/survey/dev/im'
+2020-11-17 11:33:34.246 |-INFO  [main] com.deloitte.InformationManageApplication [59] -| Started InformationManageApplication in 24.679 seconds (JVM running for 26.647)
+2020-11-17 11:33:54.174 |-INFO  [http-nio-8088-exec-1] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/survey/dev/im] [173] -| Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-11-17 11:33:54.175 |-INFO  [http-nio-8088-exec-1] org.springframework.web.servlet.DispatcherServlet [524] -| Initializing Servlet 'dispatcherServlet'
+2020-11-17 11:33:54.207 |-INFO  [http-nio-8088-exec-1] org.springframework.web.servlet.DispatcherServlet [546] -| Completed initialization in 31 ms
+2020-11-17 11:33:54.674 |-INFO  [http-nio-8088-exec-1] com.zaxxer.hikari.HikariDataSource [110] -| HikariPool-1 - Starting...
+2020-11-17 11:33:55.239 |-INFO  [http-nio-8088-exec-1] com.zaxxer.hikari.HikariDataSource [123] -| HikariPool-1 - Start completed.
+2020-11-17 11:33:55.520 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| ==>  Preparing: select distinct m.id, m.name, m.type, m.permission, m.url, m.order_num, m.parent_id, m.visible, m.icon, m.create_by, m.create_time, m.update_by, m.update_time, m.disable_flag, m.delete_flag from sys_menus m inner join sys_role_menu_rel rm on m.id = rm.menu_id inner join sys_user_role_rel ur on ur.role_id = rm.role_id inner join sys_roles r on r.id = ur.role_id where ur.user_id = ? and m.type in('catalog', 'menu') and m.visible=1 and m.delete_flag = 0 and r.disable_flag = 0 and r.delete_flag = 0 order by m.order_num asc 
+2020-11-17 11:33:55.539 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 11:33:55.586 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| <==      Total: 22
+2020-11-17 11:33:55.623 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 11:33:55.625 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 11:33:55.649 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 11:33:55.652 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| ==>  Preparing: select id, name, login_name, password, create_by, create_time, update_by, update_time, disable_flag, delete_flag from sys_users where id = ? 
+2020-11-17 11:33:55.653 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| ==> Parameters: 60(Long)
+2020-11-17 11:33:55.659 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| <==      Total: 1
+2020-11-17 11:33:55.663 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| ==>  Preparing: SELECT * FROM `sys_groups` a inner join user_group_rel b on a.id = b.group_id INNER JOIN sys_users c on c.id = b.user_id where b.user_id = ? 
+2020-11-17 11:33:55.664 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 11:33:55.671 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| <==      Total: 1
+2020-11-17 11:34:00.360 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 11:34:00.361 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 11:34:00.368 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 11:34:00.374 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==>  Preparing: SELECT u.id, u.NAME, u.login_name, u.PASSWORD, u.create_by, u.create_time, u.update_by, u.update_time, u.disable_flag, u.delete_flag , sg.group_name, sg.id group_id FROM sys_users u left join user_group_rel ugr on u.id = ugr.user_id left join sys_groups sg on sg.id = ugr.group_id WHERE delete_flag = ? 
+2020-11-17 11:34:00.377 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==> Parameters: 0(Integer)
+2020-11-17 11:34:00.385 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| <==      Total: 7
+2020-11-17 11:34:00.924 |-INFO  [http-nio-8088-exec-8] com.deloitte.system.service.customer.impl.ChannelManageServiceImpl [187] -| 调用channelList方法，参数为:{"channelName":"","contactInfo":"","paymentType":"","status":""}
+2020-11-17 11:34:00.939 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 11:34:00.941 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 11:34:00.952 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 11:34:01.271 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| ==>  Preparing: SELECT count(0) FROM channel_info c LEFT JOIN sys_users u ON c.create_by = u.id WHERE c.delete_flag = 0 
+2020-11-17 11:34:01.273 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| ==> Parameters: 
+2020-11-17 11:34:01.284 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| <==      Total: 1
+2020-11-17 11:34:01.288 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| ==>  Preparing: select c.id, channel_name, contact, contact_info, new_amount_rate, renew_amount_rate, payment_type, channel_bank_code, channel_bank_name, payment_code, audit_role, audit_id, c.status, c.create_by, c.create_time, c.update_by, c.update_time, c.disable_flag, c.delete_flag, u.name create_name from channel_info c left join sys_users u on c.create_by = u.id WHERE c.delete_flag = 0 order by c.create_time desc LIMIT ? 
+2020-11-17 11:34:01.290 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| ==> Parameters: 10(Integer)
+2020-11-17 11:34:01.297 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| <==      Total: 4
+2020-11-17 12:15:57.168 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==>  Preparing: SELECT u.id, u.NAME, u.login_name, u.PASSWORD, u.create_by, u.create_time, u.update_by, u.update_time, u.disable_flag, u.delete_flag , sg.group_name, sg.id group_id FROM sys_users u left join user_group_rel ugr on u.id = ugr.user_id left join sys_groups sg on sg.id = ugr.group_id WHERE delete_flag = ? 
+2020-11-17 12:15:57.170 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==> Parameters: 0(Integer)
+2020-11-17 12:15:57.178 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| <==      Total: 7
+2020-11-17 12:15:57.284 |-INFO  [http-nio-8088-exec-3] com.deloitte.system.service.customer.impl.PaymentRecordServiceImpl [66] -| 调用customerList方法，参数为:{"customerCode":"","endDate":"","paymentStatus":"","paymentType":"","startDate":"","status":""}
+2020-11-17 12:15:57.289 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:15:57.292 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:15:57.298 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:15:57.299 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:15:57.301 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:15:57.306 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:15:57.317 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.customer.PaymentRecordMapper.selectList_COUNT [143] -| ==>  Preparing: SELECT count(0) FROM payment_record p LEFT JOIN sys_users u ON p.create_by = u.id WHERE p.delete_flag = 0 
+2020-11-17 12:15:57.318 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.customer.PaymentRecordMapper.selectList_COUNT [143] -| ==> Parameters: 
+2020-11-17 12:15:57.323 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.customer.PaymentRecordMapper.selectList_COUNT [143] -| <==      Total: 1
+2020-11-17 12:15:57.344 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.customer.PaymentRecordMapper.selectList [143] -| ==>  Preparing: select p.id, customer_code, customer_id,customer_type, payment_type, new_amount, new_payment_amount, renew_amount, renew_payment_amount, p.remark, payment_status, payment_audit_role, audit_role, status, p.create_by, p.create_time, p.update_by, p.update_time, p.disable_flag, p.delete_flag, u.name create_name from payment_record p left join sys_users u on p.create_by = u.id WHERE p.delete_flag = 0 order by create_time desc LIMIT ? 
+2020-11-17 12:15:57.345 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.customer.PaymentRecordMapper.selectList [143] -| ==> Parameters: 10(Integer)
+2020-11-17 12:15:57.357 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:15:57.359 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:15:57.358 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:15:57.363 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.customer.PaymentRecordMapper.selectList [143] -| <==      Total: 10
+2020-11-17 12:15:57.362 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:15:57.372 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:15:57.379 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:16:10.909 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:16:10.910 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:16:10.915 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:16:10.927 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==>  Preparing: SELECT u.id, u.NAME, u.login_name, u.PASSWORD, u.create_by, u.create_time, u.update_by, u.update_time, u.disable_flag, u.delete_flag , sg.group_name, sg.id group_id FROM sys_users u left join user_group_rel ugr on u.id = ugr.user_id left join sys_groups sg on sg.id = ugr.group_id WHERE delete_flag = ? 
+2020-11-17 12:16:10.928 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==> Parameters: 0(Integer)
+2020-11-17 12:16:10.940 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| <==      Total: 7
+2020-11-17 12:16:10.977 |-INFO  [http-nio-8088-exec-1] com.deloitte.system.service.customer.impl.CustomerInfoServiceImpl [117] -| 调用customerList方法，参数为:{"contactInfo":"","customerCode":"","customerName":""}
+2020-11-17 12:16:10.990 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:16:10.991 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:16:10.995 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:16:11.015 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| ==>  Preparing: SELECT count(0) FROM customer_info c LEFT JOIN sys_users u ON c.create_by = u.id WHERE c.delete_flag = 0 
+2020-11-17 12:16:11.016 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| ==> Parameters: 
+2020-11-17 12:16:11.020 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| <==      Total: 1
+2020-11-17 12:16:11.022 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| ==>  Preparing: select c.id, CAST(AES_DECRYPT(UNHEX(customer_code),'1')as char) customer_code, customer_name, contact, CAST(AES_DECRYPT(UNHEX(contact_info),'1')as char) contact_info, new_amount_rate, renew_amount_rate, payment_type, customer_bank_code, customer_bank_name, payment_code, audit_role, audit_id, c.status, c.create_by, u.name create_name, c.create_time, c.update_by, c.update_time, c.disable_flag, c.delete_flag from customer_info c left join sys_users u on c.create_by = u.id WHERE c.delete_flag = 0 order by c.create_time desc LIMIT ? 
+2020-11-17 12:16:11.024 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| ==> Parameters: 10(Integer)
+2020-11-17 12:16:11.031 |-DEBUG [http-nio-8088-exec-1] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| <==      Total: 3
+2020-11-17 12:16:24.668 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| ==>  Preparing: select distinct m.id, m.name, m.type, m.permission, m.url, m.order_num, m.parent_id, m.visible, m.icon, m.create_by, m.create_time, m.update_by, m.update_time, m.disable_flag, m.delete_flag from sys_menus m inner join sys_role_menu_rel rm on m.id = rm.menu_id inner join sys_user_role_rel ur on ur.role_id = rm.role_id inner join sys_roles r on r.id = ur.role_id where ur.user_id = ? and m.type in('catalog', 'menu') and m.visible=1 and m.delete_flag = 0 and r.disable_flag = 0 and r.delete_flag = 0 order by m.order_num asc 
+2020-11-17 12:16:24.669 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:16:24.684 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| <==      Total: 22
+2020-11-17 12:16:24.687 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:16:24.688 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:16:24.693 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:16:24.695 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| ==>  Preparing: select id, name, login_name, password, create_by, create_time, update_by, update_time, disable_flag, delete_flag from sys_users where id = ? 
+2020-11-17 12:16:24.696 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:16:24.703 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| <==      Total: 1
+2020-11-17 12:16:24.705 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| ==>  Preparing: SELECT * FROM `sys_groups` a inner join user_group_rel b on a.id = b.group_id INNER JOIN sys_users c on c.id = b.user_id where b.user_id = ? 
+2020-11-17 12:16:24.706 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:16:24.736 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| <==      Total: 1
+2020-11-17 12:16:26.568 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:16:26.569 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:16:26.573 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:16:26.578 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==>  Preparing: SELECT u.id, u.NAME, u.login_name, u.PASSWORD, u.create_by, u.create_time, u.update_by, u.update_time, u.disable_flag, u.delete_flag , sg.group_name, sg.id group_id FROM sys_users u left join user_group_rel ugr on u.id = ugr.user_id left join sys_groups sg on sg.id = ugr.group_id WHERE delete_flag = ? 
+2020-11-17 12:16:26.579 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==> Parameters: 0(Integer)
+2020-11-17 12:16:26.583 |-INFO  [http-nio-8088-exec-4] com.deloitte.system.service.customer.impl.ChannelManageServiceImpl [187] -| 调用channelList方法，参数为:{"channelName":"","contactInfo":"","paymentType":"","status":""}
+2020-11-17 12:16:26.585 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| <==      Total: 7
+2020-11-17 12:16:26.586 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:16:26.590 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:16:26.594 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:16:26.600 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| ==>  Preparing: SELECT count(0) FROM channel_info c LEFT JOIN sys_users u ON c.create_by = u.id WHERE c.delete_flag = 0 
+2020-11-17 12:16:26.601 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| ==> Parameters: 
+2020-11-17 12:16:26.607 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| <==      Total: 1
+2020-11-17 12:16:26.611 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| ==>  Preparing: select c.id, channel_name, contact, contact_info, new_amount_rate, renew_amount_rate, payment_type, channel_bank_code, channel_bank_name, payment_code, audit_role, audit_id, c.status, c.create_by, c.create_time, c.update_by, c.update_time, c.disable_flag, c.delete_flag, u.name create_name from channel_info c left join sys_users u on c.create_by = u.id WHERE c.delete_flag = 0 order by c.create_time desc LIMIT ? 
+2020-11-17 12:16:26.612 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| ==> Parameters: 10(Integer)
+2020-11-17 12:16:26.619 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| <==      Total: 4
+2020-11-17 12:16:32.790 |-DEBUG [http-nio-8088-exec-6] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:16:32.791 |-DEBUG [http-nio-8088-exec-6] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:16:32.792 |-INFO  [http-nio-8088-exec-8] com.deloitte.system.service.customer.impl.CustomerInfoServiceImpl [117] -| 调用customerList方法，参数为:{"contactInfo":"","customerCode":"","customerName":""}
+2020-11-17 12:16:32.795 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:16:32.795 |-DEBUG [http-nio-8088-exec-6] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:16:32.798 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==>  Preparing: SELECT u.id, u.NAME, u.login_name, u.PASSWORD, u.create_by, u.create_time, u.update_by, u.update_time, u.disable_flag, u.delete_flag , sg.group_name, sg.id group_id FROM sys_users u left join user_group_rel ugr on u.id = ugr.user_id left join sys_groups sg on sg.id = ugr.group_id WHERE delete_flag = ? 
+2020-11-17 12:16:32.798 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:16:32.799 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==> Parameters: 0(Integer)
+2020-11-17 12:16:32.803 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:16:32.804 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| <==      Total: 7
+2020-11-17 12:16:32.810 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| ==>  Preparing: SELECT count(0) FROM customer_info c LEFT JOIN sys_users u ON c.create_by = u.id WHERE c.delete_flag = 0 
+2020-11-17 12:16:32.811 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| ==> Parameters: 
+2020-11-17 12:16:32.928 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| <==      Total: 1
+2020-11-17 12:16:32.932 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| ==>  Preparing: select c.id, CAST(AES_DECRYPT(UNHEX(customer_code),'1')as char) customer_code, customer_name, contact, CAST(AES_DECRYPT(UNHEX(contact_info),'1')as char) contact_info, new_amount_rate, renew_amount_rate, payment_type, customer_bank_code, customer_bank_name, payment_code, audit_role, audit_id, c.status, c.create_by, u.name create_name, c.create_time, c.update_by, c.update_time, c.disable_flag, c.delete_flag from customer_info c left join sys_users u on c.create_by = u.id WHERE c.delete_flag = 0 order by c.create_time desc LIMIT ? 
+2020-11-17 12:16:32.934 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| ==> Parameters: 10(Integer)
+2020-11-17 12:16:32.941 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| <==      Total: 3
+2020-11-17 12:16:42.009 |-INFO  [Thread-3] org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor [208] -| Shutting down ExecutorService 'applicationTaskExecutor'
+2020-11-17 12:16:42.022 |-INFO  [Thread-3] com.zaxxer.hikari.HikariDataSource [350] -| HikariPool-1 - Shutdown initiated...
+2020-11-17 12:16:42.081 |-INFO  [Thread-3] com.zaxxer.hikari.HikariDataSource [352] -| HikariPool-1 - Shutdown completed.
+2020-11-17 12:17:00.653 |-INFO  [main] com.deloitte.InformationManageApplication [50] -| Starting InformationManageApplication on CNPC0SFXTC with PID 13116 (D:\workspace\Idea_workspace\customer_manage\im\im-system\target\classes started by dqiao in D:\workspace\Idea_workspace\customer_manage\im)
+2020-11-17 12:17:00.664 |-INFO  [main] com.deloitte.InformationManageApplication [675] -| No active profile set, falling back to default profiles: default
+2020-11-17 12:17:15.466 |-INFO  [main] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [90] -| Tomcat initialized with port(s): 8088 (http)
+2020-11-17 12:17:15.543 |-INFO  [main] org.apache.coyote.http11.Http11NioProtocol [173] -| Initializing ProtocolHandler ["http-nio-8088"]
+2020-11-17 12:17:15.578 |-INFO  [main] org.apache.catalina.core.StandardService [173] -| Starting service [Tomcat]
+2020-11-17 12:17:15.579 |-INFO  [main] org.apache.catalina.core.StandardEngine [173] -| Starting Servlet engine: [Apache Tomcat/9.0.17]
+2020-11-17 12:17:16.985 |-INFO  [main] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/survey/dev/im] [173] -| Initializing Spring embedded WebApplicationContext
+2020-11-17 12:17:16.986 |-INFO  [main] org.springframework.web.context.ContextLoader [296] -| Root WebApplicationContext: initialization completed in 16066 ms
+2020-11-17 12:17:28.422 |-INFO  [main] com.deloitte.framework.security.provisioning.CustomerJdbcUserDetailsManager [138] -| No authentication manager set. Reauthentication of users when changing passwords will not be performed.
+2020-11-17 12:17:29.698 |-INFO  [main] org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor [171] -| Initializing ExecutorService 'applicationTaskExecutor'
+2020-11-17 12:17:34.023 |-INFO  [main] org.springframework.security.web.DefaultSecurityFilterChain [43] -| Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4d7cac24, org.springframework.security.web.context.SecurityContextPersistenceFilter@4db0ba1c, org.springframework.security.web.header.HeaderWriterFilter@569348e1, org.springframework.security.web.authentication.logout.LogoutFilter@21f9c6ea, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@65f3e805, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1578fa9, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2d70f312, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@409732fb, org.springframework.security.web.session.SessionManagementFilter@407b8435, org.springframework.security.web.access.ExceptionTranslationFilter@37314843, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@282c4da0]
+2020-11-17 12:17:34.539 |-INFO  [main] org.apache.coyote.http11.Http11NioProtocol [173] -| Starting ProtocolHandler ["http-nio-8088"]
+2020-11-17 12:17:34.699 |-INFO  [main] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [204] -| Tomcat started on port(s): 8088 (http) with context path '/survey/dev/im'
+2020-11-17 12:17:34.730 |-INFO  [main] com.deloitte.InformationManageApplication [59] -| Started InformationManageApplication in 36.206 seconds (JVM running for 39.622)
+2020-11-17 12:26:58.942 |-INFO  [http-nio-8088-exec-10] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/survey/dev/im] [173] -| Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-11-17 12:26:58.942 |-INFO  [http-nio-8088-exec-10] org.springframework.web.servlet.DispatcherServlet [524] -| Initializing Servlet 'dispatcherServlet'
+2020-11-17 12:26:58.998 |-INFO  [http-nio-8088-exec-10] org.springframework.web.servlet.DispatcherServlet [546] -| Completed initialization in 52 ms
+2020-11-17 12:27:06.969 |-INFO  [http-nio-8088-exec-10] com.zaxxer.hikari.HikariDataSource [110] -| HikariPool-1 - Starting...
+2020-11-17 12:27:07.465 |-INFO  [http-nio-8088-exec-10] com.zaxxer.hikari.HikariDataSource [123] -| HikariPool-1 - Start completed.
+2020-11-17 12:27:07.708 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| ==>  Preparing: select distinct m.id, m.name, m.type, m.permission, m.url, m.order_num, m.parent_id, m.visible, m.icon, m.create_by, m.create_time, m.update_by, m.update_time, m.disable_flag, m.delete_flag from sys_menus m inner join sys_role_menu_rel rm on m.id = rm.menu_id inner join sys_user_role_rel ur on ur.role_id = rm.role_id inner join sys_roles r on r.id = ur.role_id where ur.user_id = ? and m.type in('catalog', 'menu') and m.visible=1 and m.delete_flag = 0 and r.disable_flag = 0 and r.delete_flag = 0 order by m.order_num asc 
+2020-11-17 12:27:07.760 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:27:07.840 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| <==      Total: 22
+2020-11-17 12:27:07.898 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:27:07.899 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:27:07.910 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:27:07.912 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| ==>  Preparing: select id, name, login_name, password, create_by, create_time, update_by, update_time, disable_flag, delete_flag from sys_users where id = ? 
+2020-11-17 12:27:07.913 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:27:07.918 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| <==      Total: 1
+2020-11-17 12:27:07.922 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| ==>  Preparing: SELECT * FROM `sys_groups` a inner join user_group_rel b on a.id = b.group_id INNER JOIN sys_users c on c.id = b.user_id where b.user_id = ? 
+2020-11-17 12:27:07.924 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:27:07.929 |-DEBUG [http-nio-8088-exec-9] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| <==      Total: 1
+2020-11-17 12:27:11.982 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:27:11.983 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:27:11.987 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:27:12.169 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==>  Preparing: SELECT u.id, u.NAME, u.login_name, u.PASSWORD, u.create_by, u.create_time, u.update_by, u.update_time, u.disable_flag, u.delete_flag , sg.group_name, sg.id group_id FROM sys_users u left join user_group_rel ugr on u.id = ugr.user_id left join sys_groups sg on sg.id = ugr.group_id WHERE delete_flag = ? 
+2020-11-17 12:27:12.170 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==> Parameters: 0(Integer)
+2020-11-17 12:27:12.178 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| <==      Total: 7
+2020-11-17 12:27:12.530 |-INFO  [http-nio-8088-exec-4] com.deloitte.system.service.customer.impl.ChannelManageServiceImpl [187] -| 调用channelList方法，参数为:{"channelName":"","contactInfo":"","paymentType":"","status":""}
+2020-11-17 12:27:12.533 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:27:12.535 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:27:12.539 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:27:12.854 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| ==>  Preparing: SELECT count(0) FROM channel_info c LEFT JOIN sys_users u ON c.create_by = u.id WHERE c.delete_flag = 0 
+2020-11-17 12:27:12.856 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| ==> Parameters: 
+2020-11-17 12:27:12.872 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| <==      Total: 1
+2020-11-17 12:27:12.880 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| ==>  Preparing: select c.id, channel_name, contact, contact_info, new_amount_rate, renew_amount_rate, payment_type, channel_bank_code, channel_bank_name, payment_code, audit_role, audit_id, c.status, c.create_by, c.create_time, c.update_by, c.update_time, c.disable_flag, c.delete_flag, u.name create_name from channel_info c left join sys_users u on c.create_by = u.id WHERE c.delete_flag = 0 order by c.create_time desc LIMIT ? 
+2020-11-17 12:27:12.881 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| ==> Parameters: 10(Integer)
+2020-11-17 12:27:12.889 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| <==      Total: 4
+2020-11-17 12:27:14.555 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:27:14.556 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:27:14.564 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:27:14.566 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==>  Preparing: SELECT u.id, u.NAME, u.login_name, u.PASSWORD, u.create_by, u.create_time, u.update_by, u.update_time, u.disable_flag, u.delete_flag , sg.group_name, sg.id group_id FROM sys_users u left join user_group_rel ugr on u.id = ugr.user_id left join sys_groups sg on sg.id = ugr.group_id WHERE delete_flag = ? 
+2020-11-17 12:27:14.569 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==> Parameters: 0(Integer)
+2020-11-17 12:27:14.577 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| <==      Total: 7
+2020-11-17 12:27:14.629 |-INFO  [http-nio-8088-exec-10] com.deloitte.system.service.customer.impl.CustomerInfoServiceImpl [117] -| 调用customerList方法，参数为:{"contactInfo":"","customerCode":"","customerName":""}
+2020-11-17 12:27:14.630 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:27:14.633 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:27:14.637 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:27:14.655 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| ==>  Preparing: SELECT count(0) FROM customer_info c LEFT JOIN sys_users u ON c.create_by = u.id WHERE c.delete_flag = 0 
+2020-11-17 12:27:14.656 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| ==> Parameters: 
+2020-11-17 12:27:14.662 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| <==      Total: 1
+2020-11-17 12:27:14.664 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| ==>  Preparing: select c.id, CAST(AES_DECRYPT(UNHEX(customer_code),'1')as char) customer_code, customer_name, contact, CAST(AES_DECRYPT(UNHEX(contact_info),'1')as char) contact_info, new_amount_rate, renew_amount_rate, payment_type, customer_bank_code, customer_bank_name, payment_code, audit_role, audit_id, c.status, c.create_by, u.name create_name, c.create_time, c.update_by, c.update_time, c.disable_flag, c.delete_flag from customer_info c left join sys_users u on c.create_by = u.id WHERE c.delete_flag = 0 order by c.create_time desc LIMIT ? 
+2020-11-17 12:27:14.666 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| ==> Parameters: 10(Integer)
+2020-11-17 12:27:14.673 |-DEBUG [http-nio-8088-exec-10] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| <==      Total: 3
+2020-11-17 12:27:40.700 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:27:40.702 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:27:40.703 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==>  Preparing: SELECT u.id, u.NAME, u.login_name, u.PASSWORD, u.create_by, u.create_time, u.update_by, u.update_time, u.disable_flag, u.delete_flag , sg.group_name, sg.id group_id FROM sys_users u left join user_group_rel ugr on u.id = ugr.user_id left join sys_groups sg on sg.id = ugr.group_id WHERE delete_flag = ? 
+2020-11-17 12:27:40.705 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==> Parameters: 0(Integer)
+2020-11-17 12:27:40.708 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:27:40.723 |-DEBUG [http-nio-8088-exec-5] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| <==      Total: 7
+2020-11-17 12:27:40.781 |-INFO  [http-nio-8088-exec-7] com.deloitte.system.service.customer.impl.CustomerInfoServiceImpl [160] -| 调用customerList方法，参数为:{"contactInfo":"","customerCode":"","customerName":""}
+2020-11-17 12:27:40.783 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 12:27:40.784 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 12:27:40.792 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 12:27:40.802 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelCustomerInfoMapper.selectList_COUNT [143] -| ==>  Preparing: SELECT count(0) FROM channel_customer_info c LEFT JOIN sys_users u ON c.create_by = u.id LEFT JOIN channel_info ci ON c.channel_id = ci.id WHERE c.delete_flag = 0 
+2020-11-17 12:27:40.804 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelCustomerInfoMapper.selectList_COUNT [143] -| ==> Parameters: 
+2020-11-17 12:27:40.809 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelCustomerInfoMapper.selectList_COUNT [143] -| <==      Total: 1
+2020-11-17 12:27:40.812 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelCustomerInfoMapper.selectList [143] -| ==>  Preparing: select c.id, c.customer_code, c.customer_name, c.contact, c.contact_info, c.channel_id, c.audit_role, u.name create_name, c.audit_id, c.status, c.create_by, c.create_time, c.update_by, c.update_time, c.disable_flag, c.delete_flag, ci.channel_name, ci.new_amount_rate, ci.renew_amount_rate, ci.payment_type from channel_customer_info c left join sys_users u on c.create_by = u.id left join channel_info ci on c.channel_id = ci.id WHERE c.delete_flag = 0 order by c.create_time desc LIMIT ? 
+2020-11-17 12:27:40.813 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelCustomerInfoMapper.selectList [143] -| ==> Parameters: 10(Integer)
+2020-11-17 12:27:40.824 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelCustomerInfoMapper.selectList [143] -| <==      Total: 3
+2020-11-17 13:55:39.138 |-INFO  [Thread-3] org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor [208] -| Shutting down ExecutorService 'applicationTaskExecutor'
+2020-11-17 13:55:39.160 |-INFO  [Thread-3] com.zaxxer.hikari.HikariDataSource [350] -| HikariPool-1 - Shutdown initiated...
+2020-11-17 13:55:39.186 |-INFO  [Thread-3] com.zaxxer.hikari.HikariDataSource [352] -| HikariPool-1 - Shutdown completed.
+2020-11-17 13:55:49.066 |-INFO  [main] com.deloitte.InformationManageApplication [50] -| Starting InformationManageApplication on CNPC0SFXTC with PID 15068 (D:\workspace\Idea_workspace\customer_manage\im\im-system\target\classes started by dqiao in D:\workspace\Idea_workspace\customer_manage\im)
+2020-11-17 13:55:49.074 |-INFO  [main] com.deloitte.InformationManageApplication [675] -| No active profile set, falling back to default profiles: default
+2020-11-17 13:55:58.877 |-INFO  [main] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [90] -| Tomcat initialized with port(s): 8088 (http)
+2020-11-17 13:55:58.914 |-INFO  [main] org.apache.coyote.http11.Http11NioProtocol [173] -| Initializing ProtocolHandler ["http-nio-8088"]
+2020-11-17 13:55:58.942 |-INFO  [main] org.apache.catalina.core.StandardService [173] -| Starting service [Tomcat]
+2020-11-17 13:55:58.943 |-INFO  [main] org.apache.catalina.core.StandardEngine [173] -| Starting Servlet engine: [Apache Tomcat/9.0.17]
+2020-11-17 13:55:59.473 |-INFO  [main] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/survey/dev/im] [173] -| Initializing Spring embedded WebApplicationContext
+2020-11-17 13:55:59.474 |-INFO  [main] org.springframework.web.context.ContextLoader [296] -| Root WebApplicationContext: initialization completed in 10230 ms
+2020-11-17 13:56:02.793 |-INFO  [main] com.deloitte.framework.security.provisioning.CustomerJdbcUserDetailsManager [138] -| No authentication manager set. Reauthentication of users when changing passwords will not be performed.
+2020-11-17 13:56:03.175 |-INFO  [main] org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor [171] -| Initializing ExecutorService 'applicationTaskExecutor'
+2020-11-17 13:56:04.223 |-INFO  [main] org.springframework.security.web.DefaultSecurityFilterChain [43] -| Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@69d103f0, org.springframework.security.web.context.SecurityContextPersistenceFilter@40d96578, org.springframework.security.web.header.HeaderWriterFilter@682618e5, org.springframework.security.web.authentication.logout.LogoutFilter@7db5b890, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@134a8ead, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@283ab206, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@718989fa, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5b742bc8, org.springframework.security.web.session.SessionManagementFilter@5f0f70c7, org.springframework.security.web.access.ExceptionTranslationFilter@5d14e99e, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@1d60059f]
+2020-11-17 13:56:04.423 |-INFO  [main] org.apache.coyote.http11.Http11NioProtocol [173] -| Starting ProtocolHandler ["http-nio-8088"]
+2020-11-17 13:56:04.530 |-INFO  [main] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [204] -| Tomcat started on port(s): 8088 (http) with context path '/survey/dev/im'
+2020-11-17 13:56:04.541 |-INFO  [main] com.deloitte.InformationManageApplication [59] -| Started InformationManageApplication in 17.124 seconds (JVM running for 18.849)
+2020-11-17 13:59:15.000 |-INFO  [http-nio-8088-exec-1] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/survey/dev/im] [173] -| Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-11-17 13:59:15.003 |-INFO  [http-nio-8088-exec-1] org.springframework.web.servlet.DispatcherServlet [524] -| Initializing Servlet 'dispatcherServlet'
+2020-11-17 13:59:15.034 |-INFO  [http-nio-8088-exec-1] org.springframework.web.servlet.DispatcherServlet [546] -| Completed initialization in 31 ms
+2020-11-17 13:59:25.156 |-INFO  [http-nio-8088-exec-1] com.zaxxer.hikari.HikariDataSource [110] -| HikariPool-1 - Starting...
+2020-11-17 13:59:25.476 |-INFO  [http-nio-8088-exec-1] com.zaxxer.hikari.HikariDataSource [123] -| HikariPool-1 - Start completed.
+2020-11-17 13:59:25.637 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| ==>  Preparing: select distinct m.id, m.name, m.type, m.permission, m.url, m.order_num, m.parent_id, m.visible, m.icon, m.create_by, m.create_time, m.update_by, m.update_time, m.disable_flag, m.delete_flag from sys_menus m inner join sys_role_menu_rel rm on m.id = rm.menu_id inner join sys_user_role_rel ur on ur.role_id = rm.role_id inner join sys_roles r on r.id = ur.role_id where ur.user_id = ? and m.type in('catalog', 'menu') and m.visible=1 and m.delete_flag = 0 and r.disable_flag = 0 and r.delete_flag = 0 order by m.order_num asc 
+2020-11-17 13:59:25.659 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 13:59:25.716 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.MenuMapper.getMenuByUserId [143] -| <==      Total: 22
+2020-11-17 13:59:25.765 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 13:59:25.767 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 13:59:25.778 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 13:59:25.780 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| ==>  Preparing: select id, name, login_name, password, create_by, create_time, update_by, update_time, disable_flag, delete_flag from sys_users where id = ? 
+2020-11-17 13:59:25.781 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| ==> Parameters: 60(Long)
+2020-11-17 13:59:25.787 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.UserMapper.selectUserById [143] -| <==      Total: 1
+2020-11-17 13:59:25.789 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| ==>  Preparing: SELECT * FROM `sys_groups` a inner join user_group_rel b on a.id = b.group_id INNER JOIN sys_users c on c.id = b.user_id where b.user_id = ? 
+2020-11-17 13:59:25.791 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 13:59:25.810 |-DEBUG [http-nio-8088-exec-2] com.deloitte.system.mapper.sys.GroupMapper.selectGroupByUserId [143] -| <==      Total: 1
+2020-11-17 13:59:27.928 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 13:59:27.930 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 13:59:27.935 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 13:59:28.075 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==>  Preparing: SELECT u.id, u.NAME, u.login_name, u.PASSWORD, u.create_by, u.create_time, u.update_by, u.update_time, u.disable_flag, u.delete_flag , sg.group_name, sg.id group_id FROM sys_users u left join user_group_rel ugr on u.id = ugr.user_id left join sys_groups sg on sg.id = ugr.group_id WHERE delete_flag = ? 
+2020-11-17 13:59:28.078 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==> Parameters: 0(Integer)
+2020-11-17 13:59:28.091 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| <==      Total: 7
+2020-11-17 13:59:28.545 |-INFO  [http-nio-8088-exec-7] com.deloitte.system.service.customer.impl.ChannelManageServiceImpl [187] -| 调用channelList方法，参数为:{"channelName":"","contactInfo":"","paymentType":"","status":""}
+2020-11-17 13:59:28.547 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 13:59:28.548 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 13:59:28.554 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 13:59:28.725 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| ==>  Preparing: SELECT count(0) FROM channel_info c LEFT JOIN sys_users u ON c.create_by = u.id WHERE c.delete_flag = 0 
+2020-11-17 13:59:28.726 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| ==> Parameters: 
+2020-11-17 13:59:28.733 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList_COUNT [143] -| <==      Total: 1
+2020-11-17 13:59:28.741 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| ==>  Preparing: select c.id, channel_name, contact, contact_info, new_amount_rate, renew_amount_rate, payment_type, channel_bank_code, channel_bank_name, payment_code, audit_role, audit_id, c.status, c.create_by, c.create_time, c.update_by, c.update_time, c.disable_flag, c.delete_flag, u.name create_name from channel_info c left join sys_users u on c.create_by = u.id WHERE c.delete_flag = 0 order by c.create_time desc LIMIT ? 
+2020-11-17 13:59:28.744 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| ==> Parameters: 10(Integer)
+2020-11-17 13:59:28.761 |-DEBUG [http-nio-8088-exec-7] com.deloitte.system.mapper.customer.ChannelInfoMapper.selectList [143] -| <==      Total: 4
+2020-11-17 13:59:30.079 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 13:59:30.080 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 13:59:30.083 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==>  Preparing: SELECT u.id, u.NAME, u.login_name, u.PASSWORD, u.create_by, u.create_time, u.update_by, u.update_time, u.disable_flag, u.delete_flag , sg.group_name, sg.id group_id FROM sys_users u left join user_group_rel ugr on u.id = ugr.user_id left join sys_groups sg on sg.id = ugr.group_id WHERE delete_flag = ? 
+2020-11-17 13:59:30.084 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| ==> Parameters: 0(Integer)
+2020-11-17 13:59:30.086 |-DEBUG [http-nio-8088-exec-3] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 13:59:30.093 |-DEBUG [http-nio-8088-exec-8] com.deloitte.system.mapper.sys.UserMapper.selectUserList [143] -| <==      Total: 7
+2020-11-17 13:59:30.204 |-INFO  [http-nio-8088-exec-4] com.deloitte.system.service.customer.impl.CustomerInfoServiceImpl [117] -| 调用customerList方法，参数为:{"contactInfo":"","customerCode":"","customerName":""}
+2020-11-17 13:59:30.205 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==>  Preparing: SELECT c.id,c.name,c.code FROM `sys_users` a inner join sys_user_role_rel b on a.id = b.user_id inner join sys_roles c on b.role_id = c.id where a.id = ? 
+2020-11-17 13:59:30.206 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| ==> Parameters: 60(Long)
+2020-11-17 13:59:30.211 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.sys.RoleMapper.selectRoleByUserId [143] -| <==      Total: 1
+2020-11-17 13:59:30.239 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| ==>  Preparing: SELECT count(0) FROM customer_info c LEFT JOIN sys_users u ON c.create_by = u.id WHERE c.delete_flag = 0 
+2020-11-17 13:59:30.240 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| ==> Parameters: 
+2020-11-17 13:59:30.292 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList_COUNT [143] -| <==      Total: 1
+2020-11-17 13:59:30.294 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| ==>  Preparing: select c.id, CAST(AES_DECRYPT(UNHEX(customer_code),'1')as char) customer_code, customer_name, contact, CAST(AES_DECRYPT(UNHEX(contact_info),'1')as char) contact_info, new_amount_rate, renew_amount_rate, payment_type, customer_bank_code, customer_bank_name, payment_code, audit_role, audit_id, c.status, c.create_by, u.name create_name, c.create_time, c.update_by, c.update_time, c.disable_flag, c.delete_flag from customer_info c left join sys_users u on c.create_by = u.id WHERE c.delete_flag = 0 order by c.create_time desc LIMIT ? 
+2020-11-17 13:59:30.295 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| ==> Parameters: 10(Integer)
+2020-11-17 13:59:30.325 |-DEBUG [http-nio-8088-exec-4] com.deloitte.system.mapper.customer.CustomerInfoMapper.selectList [143] -| <==      Total: 3

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色列表</title>
+    <link rel="stylesheet" th:href="@{/css/element-ui/index.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/vue/vue.js}"></script>
+    <script th:src="@{/js/element-ui/element.js}"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        .table-container th, .table-container td {
+            text-align: center;
+        }
+
+        .el-dialog__body {
+            padding: 30px;
+        }
+        .el-dialog__wrapper .el-form-item__content {
+            width: 50%;
+        }
+
+        .el-dialog__wrapper .el-form-item__content .el-select {
+            width: 100%;
+        }
+        .el-main{
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="roleList" v-cloak>
+    <el-container>
+
+        <el-header>
+            <el-card>
+                <el-form :inline="true" :model="searchFormData" ref="searchForm" size="mini">
+                    <el-form-item label="角色编码" prop="code">
+                        <el-input v-model="searchFormData.code"></el-input>
+                    </el-form-item>
+                    <el-form-item label="角色名称" prop="name">
+                        <el-input v-model="searchFormData.name"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+                        <el-button icon="el-icon-refresh" @click="resetSearch('searchForm')">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </el-header>
+
+        <el-main>
+            <el-card>
+                <el-row class="global-operate">
+                    <el-button size="mini" type="primary" @click="add()" icon="el-icon-plus">新增</el-button>
+                    <el-button size="mini" type="danger" @click="removeAll()" icon="el-icon-delete">批量删除</el-button>
+                </el-row>
+
+                <el-table
+                        :data="page.list"
+                        ref="multipleTable"
+                        @selection-change="handleSelectionChange"
+                        size="mini" empty-text="抱歉，未查询到相关数据" v-loading="loading" stripe v-if="page && page.list"
+                        class="table-container" width="100%">
+                    <el-table-column type="selection" width="55"></el-table-column>
+                    <el-table-column prop="id" label="角色主键"></el-table-column>
+                    <el-table-column prop="code" label="角色编码"></el-table-column>
+                    <el-table-column prop="name" label="角色名称"></el-table-column>
+                    <el-table-column prop="disableFlag" label="状态" :formatter="formatterStatus"></el-table-column>
+                    <el-table-column prop="createTime" label="创建时间"></el-table-column>
+                    <el-table-column label="操作" width="300">
+                        <template slot-scope="scope">
+                            <el-button size="mini" plain icon="el-icon-edit-outline" @click="edit(scope.row)">编辑</el-button>
+                            <el-button type="mini" plain icon="el-icon-delete" @click="remove(scope.row.id)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-row class="block">
+                <el-col :xs="24" :sm="24" :md="24">
+                    <div style="text-align:right;padding:10px">
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page="page.pageNum"
+                                :page-sizes="[10, 20, 30, 40]"
+                                :page-size="10"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="page.total">
+                        </el-pagination>
+                    </div>
+                </el-col>
+            </el-row>
+            </el-card>
+        </el-main>
+    </el-container>
+
+    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" @closed="handleClose('dialogForm')" height="60%">
+        <el-form :model="dialogForm" ref="dialogForm" :rules="rules">
+            <el-form-item label="角色编码" prop="code" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.code" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="角色名称" prop="name" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.name" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="权限" :label-width="formLabelWidth" prop="menuIds">
+                <el-tree
+                        :data="dataTree"
+                        show-checkbox
+                        v-model="dialogForm.menuIds"
+                        node-key="id"
+                        default-expand-all
+                        ref="tree"
+                        @input="changeMenu"
+                        @check-change="getChecked"
+                        :props="defaultProps">
+                </el-tree>
+            </el-form-item>
+            <el-form-item label="状态" :label-width="formLabelWidth">
+                <el-radio-group v-model="dialogForm.disableFlag">
+                    <el-radio :label="0">正常</el-radio>
+                    <el-radio :label="1">停用</el-radio>
+                </el-radio-group>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="dialogFormVisible = false; handleClose('dialogForm')">取 消</el-button>
+            <el-button size="mini" type="primary" @click="dialogFormSubmit('dialogForm')">确 定</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+<!--<div th:include="include :: footer"></div>-->
+<script th:inline="javascript"> var ctx = [[@{/}]];</script>
+<script>
+
+    var prefix = ctx + "system/role";
+    var prefix1 = ctx + "system/menu"
+    var app = new Vue({
+        el: "#roleList",
+        data: function () {
+            var self = this;
+
+
+            var validateName = function(rule, value, callback) {
+                if (value && self.dialogForm.oldName != value) {
+                    $.ajax({
+                        url: prefix + "/findRoleListByNameOrCode  ",
+                        method: "POST",
+                        data: {"name": value},
+                        dataType: "json",
+                        async : false,
+                        error: function (request) {
+                            self.$message({
+                                message: '请求出现错误',
+                                type: 'error'
+                            });
+                        },
+                        success: function (response) {
+                            if (response.length > 0){
+                                return callback(new Error('该角色名称已存在！'));
+                            }
+                        }
+                    });
+                }
+                callback();
+            };
+
+            var validateCode = function(rule, value, callback) {
+                if (value && self.dialogForm.oldCode != value) {
+                    $.ajax({
+                        url: prefix + "/findRoleListByNameOrCode  ",
+                        method: "POST",
+                        data: {"code": value},
+                        dataType: "json",
+                        async : false,
+                        error: function (request) {
+                            self.$message({
+                                message: '请求出现错误',
+                                type: 'error'
+                            });
+                        },
+                        success: function (response) {
+                            if (response.length > 0){
+                                return callback(new Error('该角色编码已存在！'));
+                            }
+                        }
+                    });
+                }
+                callback();
+            };
+
+            return {
+                formLabelWidth: '150px',
+                searchFormData: {
+                    code: '',
+                    name: ''
+                },
+                page: {
+                    pageNum: 1,
+                    pageSize: 10,
+                    total: 0,
+                    list: [],
+                },
+                optionsMenus:[],
+                loading: true,
+                dialogTitle: '',
+                dialogFormVisible: false,
+                dialogForm: {
+                    id:'',
+                    code:'',
+                    name: '',
+                    menuIds: [],
+                    disableFlag:'',
+                },
+                formLabelWidth: '30%',
+                successMsg: '',
+                dialogFormUrl: '',
+                selectedRows: [],
+                rules: {
+                    code: [
+                        { required: true, message: '请输入角色编码', trigger: 'blur' },
+                        { min: 1, max: 20, message: '长度在1到20 个字符', trigger: 'blur' },
+                        { validator: validateCode, trigger: 'blur' },
+                    ],
+                    name: [
+                        { required: true, message: '请输入角色名称', trigger: 'blur'},
+                        { min: 1, max: 30, message: '长度在1到30 个字符', trigger: 'blur' },
+                        { validator: validateName, trigger: 'blur' }
+                    ],
+                },
+                defaultProps:{
+                    children: 'children',
+                    label: 'name'
+                },
+                dataTree: [],
+            }
+        },
+        methods: {
+            handleSizeChange: function (val) {
+                if (this.page) {
+                    this.page.pageSize = val;
+                }
+                this.loadData();
+            },
+
+            handleCurrentChange: function (val) {
+                if (this.page) {
+                    this.page.pageNum = val;
+                }
+                this.loadData();
+            },
+
+            formatterStatus: function (row) {
+                if(row.disableFlag == '0'){
+                    return "正常";
+                }
+                return "停用";
+            },
+            resetSearch: function(formName) {
+                this.$refs[formName].resetFields();
+            },
+            search: function () {
+                var _this = this;
+                var queryParam = {};
+                queryParam.pageNum = _this.page.pageNum;
+                queryParam.pageSize = _this.page.pageSize;
+                Object.assign(queryParam, _this.searchFormData);
+                $.ajax({
+                    url: prefix + "/list",
+                    method: "POST",
+                    data: queryParam,
+                    dataType: "json",
+                    error: function (request) {
+                        _this.$message.error("请求出现错误！");
+                    },
+                    success: function (response) {
+                        _this.loading = false;
+                        _this.page.list = response.rows;
+                        _this.page.total = response.total;
+                    }
+                });
+            },
+
+            handleSelectionChange: function (array) {
+                this.selectedRows = array;
+            },
+            /**
+             * 添加数据
+             */
+            add: function () {
+                this.dialogTitle = '添加角色';
+                this.dialogFormVisible = true;
+                this.dialogFormUrl = prefix + "/add";
+                this.dialogForm = {
+                    code: '',
+                    name: '',
+                    menuIds: [],
+                    disableFlag:0
+                };
+            },
+            /**
+             * 获取选中节点
+             */
+            getChecked: function(){
+                this.dialogForm.menuIds = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
+            },
+            changeMenu: function(){
+                this.$refs.dialogForm.validateField("menuIds")
+            },
+
+            /**
+             * 编辑数据
+             */
+            edit: function (row) {
+                var _this = this;
+                _this.dialogTitle = '编辑角色';
+                _this.dialogFormVisible = true;
+                _this.dialogFormUrl = prefix + "/edit";
+                _this.dialogForm = {
+                        id: row.id,
+                        name: row.name,
+                        code: row.code,
+                        disableFlag:row.disableFlag,
+                    };
+                _this.dialogForm.oldName = row.name;
+                _this.dialogForm.oldCode = row.code;
+                $.ajax({
+                    url: prefix1 + "/getByRoleId",
+                    method: "POST",
+                    data:{'roleId': row.id},
+                    dataType: 'json',
+                    error: function (request) {
+                        _this.$message.error("请求出现错误");
+                    },
+                    success: function (res) {
+                        var ids = []
+                        _this.$refs.tree.setCheckedNodes(res)
+                        for(var i=0; i<res.length; i++){
+                            ids.push(res[i].id)
+                        }
+                        _this.dialogForm.menuIds = ids;
+                        console.log( _this.dialogForm.menuIds)
+                    },
+                });
+            },
+
+            /**
+             * 删除数据
+             */
+            remove: function (deleteId) {
+                var _this = this;
+                var deleteids = []
+                deleteids.push(deleteId)
+                this.$confirm('确认要删除该数据吗？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function() {
+                    _this.handleDelete(deleteids);
+                });
+            },
+
+            /**
+             * 批量删除
+             */
+            removeAll: function () {
+                var _this = this;
+                if(this.selectedRows.length > 0){
+                    var ids = [];
+                    this.$confirm('确认要删除选中的' + _this.selectedRows.length +'条数据吗？', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function() {
+                            _this.selectedRows.forEach(function(row){
+                            ids.push(row.id)
+                        });
+                        _this.handleDelete(ids);
+                    });
+                }else {
+                    _this.$message.error("请选中要删除的行！");
+                }
+            },
+
+            handleDelete: function(ids){
+                var _this = this;
+                var data = {
+                    "ids": ids,
+                }
+                $.ajax({
+                    url: prefix + "/remove",
+                    method: "POST",
+                    data:data,
+                    dataType: 'json',
+                    error: function (request) {
+                        _this.$message.error("请求出现错误");
+                    },
+                    success: function (response) {
+                        _this.$message.success(response.msg);
+                        _this.loadData();
+                    }
+                });
+            },
+
+            /**
+             * 提交新增/编辑的数据
+             */
+            dialogFormSubmit: function (formName) {
+                var _this = this;
+                var obj = {
+                    name: _this.dialogForm.name,
+                    id: _this.dialogForm.id,
+                    code: _this.dialogForm.code,
+                    menuIds: _this.dialogForm.menuIds,
+                    disableFlag: _this.dialogForm.disableFlag
+                };
+                _this.$refs[formName].validate(function (valid) {
+                    if (valid) {
+                        $.ajax({
+                            url: _this.dialogFormUrl,
+                            method: "POST",
+                            data: JSON.stringify(obj),
+                            contentType: 'application/json',
+                            success: function (response) {
+                                if(response.code == 500){
+                                    _this.dialogFormVisible =
+                                        _this.$message.error(response.msg);
+                                }else{
+                                    _this.loadData();
+                                    _this.dialogFormVisible = false;
+                                    _this.successMsg = response.msg;
+                                }
+
+
+                            },
+                            error: function (request) {
+                                _this.$message.error("请求出现错误");
+                            }
+                        });
+                    }
+                });
+            },
+
+
+            /**
+             * 获取数据
+             */
+            loadData: function () {
+                var _this = this;
+                var queryParam = {};
+                queryParam.pageNum = this.page.pageNum;
+                queryParam.pageSize = this.page.pageSize;
+                $.ajax({
+                    url: prefix + "/list",
+                    method: "POST",
+                    data: queryParam,
+                    dataType: "json",
+                    error: function (request) {
+                        _this.$message.error("请求出现错误");
+                    },
+                    success: function (response) {
+                        _this.loading = false;
+                        _this.page.list = response.rows;
+                        _this.page.total = response.total;
+                    }
+                });
+            },
+
+            loadTree: function () {
+                var _this = this;
+                $.ajax({
+                    url: prefix1 + "/getTreeData",
+                    method: "post",
+                    dataType: "json",
+                    error: function (request) {
+                        // this.$message.error("请求出现错误");
+                    },
+                    success: function (res) {
+                        _this.dataTree = res
+                    }
+                });
+            },
+            handleSizeChange: function (val) {
+                if (this.page) {
+                    this.page.pageSize = val;
+                }
+                this.loadData();
+            },
+            handleCurrentChange: function (val) {
+                if (this.page) {
+                    this.page.pageNum = val;
+                }
+                this.loadData();
+            },
+            handleClose: function(formName){
+                var _this = this;
+                _this.$refs[formName].resetFields();
+                _this.$refs.tree.setCheckedKeys([])
+            },
+
+        },
+        mounted: function () {
+            this.loadData();
+            this.loadTree();
+        }
+    });
+
+</script>
+</body>
+
+
+</html>

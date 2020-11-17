@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.deloitte.system.mapper.customer.CustomerInfoEditMapper">
+
+    <resultMap id="BaseResultMap" type="com.deloitte.system.model.customer.CustomerInfoEdit">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="customer_code" property="customerCode" jdbcType="VARCHAR"/>
+        <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
+        <result column="contact" property="contact" jdbcType="VARCHAR"/>
+        <result column="contact_info" property="contactInfo" jdbcType="VARCHAR"/>
+        <result column="new_amount_rate" property="newAmountRate" jdbcType="DOUBLE"/>
+        <result column="renew_amount_rate" property="renewAmountRate" jdbcType="DOUBLE"/>
+        <result column="payment_type" property="paymentType" jdbcType="VARCHAR"/>
+        <result column="customer_bank_code" property="customerBankCode" jdbcType="VARCHAR"/>
+        <result column="customer_bank_name" property="customerBankName" jdbcType="VARCHAR"/>
+        <result column="payment_code" property="paymentCode" jdbcType="VARCHAR"/>
+        <result column="audit_role" property="auditRole" jdbcType="VARCHAR"/>
+        <result column="audit_id" property="auditId" jdbcType="BIGINT"/>
+        <result column="change_type" property="changeType" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="BIGINT"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="disable_flag" property="disableFlag" jdbcType="INTEGER"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="create_name" property="createName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    c.id, CAST(AES_DECRYPT(UNHEX(customer_code),'1')as char) customer_code, customer_name, contact, CAST(AES_DECRYPT(UNHEX(contact_info),'1')as char) contact_info,
+    new_amount_rate, renew_amount_rate, payment_type, customer_bank_code,
+    customer_bank_name, payment_code, audit_role, audit_id, change_type, c.create_by, c.create_time, c.update_by,
+    c.update_time, c.disable_flag, c.delete_flag, u.name create_name from customer_info_edit c
+    left join sys_users u on c.create_by = u.id
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        where c.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from customer_info_edit
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+    <insert id="insert" parameterType="com.deloitte.system.model.customer.CustomerInfoEdit">
+    insert into customer_info_edit (id, customer_code, customer_name, 
+      contact, contact_info, new_amount_rate, renew_amount_rate,
+      payment_type, customer_bank_code, customer_bank_name, payment_code,
+      audit_role, audit_id, change_type, create_by, create_time, update_by,
+      update_time, disable_flag, delete_flag
+      )
+    values (#{id,jdbcType=BIGINT}, HEX(AES_ENCRYPT(#{customerCode,jdbcType=VARCHAR},'1')), #{customerName,jdbcType=VARCHAR},
+       #{contact,jdbcType=VARCHAR}, HEX(AES_ENCRYPT(#{contactInfo,jdbcType=VARCHAR},'1')),
+      #{newAmountRate,jdbcType=DOUBLE}, #{renewAmountRate,jdbcType=DOUBLE}, #{paymentType,jdbcType=VARCHAR},
+      #{customerBankCode,jdbcType=VARCHAR}, #{customerBankName,jdbcType=VARCHAR}, #{paymentCode,jdbcType=VARCHAR},
+       #{auditRole,jdbcType=VARCHAR},#{auditId,jdbcType=BIGINT}, #{changeType,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT},
+      #{updateTime,jdbcType=TIMESTAMP}, #{disableFlag,jdbcType=INTEGER}, #{deleteFlag,jdbcType=INTEGER}
+      )
+  </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.deloitte.system.model.customer.CustomerInfoEdit">
+    update customer_info_edit
+    set customer_code =  HEX(AES_ENCRYPT(#{customerCode,jdbcType=VARCHAR},'1')),
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      contact_info = HEX(AES_ENCRYPT(#{contactInfo,jdbcType=VARCHAR},'1')),
+      new_amount_rate = #{newAmountRate,jdbcType=DOUBLE},
+      renew_amount_rate = #{renewAmountRate,jdbcType=DOUBLE},
+      payment_type = #{paymentType,jdbcType=VARCHAR},
+      customer_bank_code = #{customerBankCode,jdbcType=VARCHAR},
+      customer_bank_name = #{customerBankName,jdbcType=VARCHAR},
+      payment_code = #{paymentCode,jdbcType=VARCHAR},
+      audit_role = #{auditRole,jdbcType=VARCHAR},
+      audit_id = #{auditId,jdbcType=BIGINT},
+      change_type = #{changeType,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      disable_flag = #{disableFlag,jdbcType=INTEGER},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="selectList" parameterType="com.deloitte.system.model.customer.CustomerInfoEdit"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        <where>
+            and c.delete_flag = 0
+            <if test="customerCode != null and customerCode != '' ">and AES_DECRYPT(UNHEX(customer_code),'1') like
+                concat('%', #{customerCode,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="customerName != null and customerName != '' ">and customer_name like concat('%',
+                #{customerName,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="contact != null and contact != '' ">and contact like concat('%', #{contact,jdbcType=VARCHAR},
+                '%')
+            </if>
+            <if test="contactInfo != null and contactInfo != '' ">and AES_DECRYPT(UNHEX(contact_info),'1') like
+                concat('%', #{contactInfo,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="paymentType != null and paymentType != ''">
+                and payment_type = #{paymentType,jdbcType=VARCHAR}
+            </if>
+            <if test="customerBankCode != null and customerBankCode != '' ">and customer_bank_code like concat('%',
+                #{customerBankCode,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="createBy != null and createBy != '' ">and c.create_by = #{createBy,jdbcType=BIGINT}</if>
+            <if test="changeType != null and changeType != '' ">and change_type = #{changeType,jdbcType=VARCHAR}</if>
+            <if test="auditRole != null and auditRole != '' ">and c.audit_role = #{auditRole,jdbcType=VARCHAR}</if>
+        </where>
+        order by c.create_time desc
+    </select>
+
+    <delete id="deleteCustomerInfoEdit" parameterType="Long">
+        delete from customer_info_edit where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

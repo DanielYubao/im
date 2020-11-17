@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赠送管理-赠送记录</title>
+    <link rel="stylesheet" th:href="@{/css/element-ui/index.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/vue/vue.js}"></script>
+    <script th:src="@{/js/element-ui/element.js}"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .el-header {
+            height: auto !important;
+        }
+        .el-header .el-card .el-card__body{
+            padding-bottom: 2px;
+        }
+        .table-container th, .table-container td {
+            text-align: center;
+        }
+        .el-dialog__body {
+            padding: 30px;
+        }
+        .el-dialog__wrapper .el-form-item__content {
+            width: 50%;
+        }
+        .el-dialog__wrapper .el-form-item__content .el-select {
+            width: 100%;
+        }
+        .global-operate {
+            margin-bottom: 20px;
+        }
+        .global-operate .operate-btn {
+            display: inline-block;
+        }
+        .global-operate .operate-btn + .operate-btn {
+            margin-left: 16px;
+        }
+        .error-message {
+            color: #F56C6C;
+            font-size: 12px;
+        }
+        .el-dialog__body {
+            max-height: 68vh;
+            overflow: auto;
+        }
+        .el-form-item.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div id="giveRecordList" v-cloak>
+    <el-container>
+        <el-header>
+            <el-card>
+                <el-form :inline="true" :model="searchFormData" ref="searchForm" size="mini">
+                    <el-form-item label="受赠人" prop="doneeName">
+                        <el-input v-model="searchFormData.doneeName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="账户信息" prop="accountInfo">
+                        <el-input v-model="searchFormData.accountInfo"></el-input>
+                    </el-form-item>
+                    <el-form-item label="赠送状态" prop="giveStatus">
+                        <el-select v-model="searchFormData.giveStatus">
+                            <el-option v-for="item in giveStatusList" :value="item.value" :label="item.label" :key="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="归属人" prop="createBy" v-if="isAdmin">
+                        <el-select v-model="searchFormData.createBy">
+                            <el-option v-for="item in userList" :value="item.id" :label="item.name" :key="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="创建时间" prop="createTime">
+                        <el-date-picker
+                                v-model="searchFormData.createTime"
+                                @change="changeCreateTime"
+                                type="daterange"
+                                range-separator="至"
+                                value-format="yyyy-MM-dd"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item class="hidden" label="查询开始时间" prop="startDate">
+                        <el-input v-model="searchFormData.startDate"></el-input>
+                    </el-form-item>
+                    <el-form-item class="hidden" label="查询结束时间" prop="endDate">
+                        <el-input v-model="searchFormData.endDate"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+                        <el-button icon="el-icon-refresh" @click="resetSearch">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </el-header>
+
+        <el-main>
+            <el-card>
+                <el-row class="global-operate">
+                    <template v-if="!isFinance">
+                        <el-button size="mini" type="primary" @click="handleAdd()" class="operate-btn" icon="el-icon-plus">新增</el-button>
+                        <el-button size="mini" type="primary" @click="downloadTemplate()" class="operate-btn" icon="el-icon-download">模板下载</el-button>
+                        <el-upload
+                                class="operate-btn"
+                                :action="uploadAction()"
+                                :with-credentials="true"
+                                :limit = "1"
+                                mulitiply
+                                :show-file-list="false"
+                                ref="uploadRef"
+                                :on-error="uploadError"
+                                :on-success="uploadSuccess">
+                            <el-button slot="trigger" type="primary" size="mini" icon="el-icon-upload2">赠送记录上传</el-button>
+                        </el-upload>
+    <!--                    <el-button size="mini" type="danger" @click="handleAllDelete()" :disabled="selectedData.length === 0" class="operate-btn" icon="el-icon-delete">批量删除</el-button>-->
+                        <el-button size="mini" type="warning" @click="handleAllSubmit()" :disabled="selectedData.length === 0" class="operate-btn" icon="el-icon-s-promotion">批量提交审核</el-button>
+                    </template>
+                    <el-button size="mini" type="primary" @click="handleExport()" class="operate-btn" icon="el-icon-download">导出</el-button>
+                </el-row>
+
+                <el-table
+                        v-if="page && page.list"
+                        :data="page.list"
+                        v-loading="loading"
+                        size="mini"
+                        empty-text="抱歉，未查询到相关数据"
+                        stripe
+                        ref="multipleTable"
+                        @select="handleSelect"
+                        @select-all="handleSelectAll"
+                        :row-key="getRowKey"
+                        class="table-container">
+                    <el-table-column type="selection" width="45" :reserve-selection="true" :selectable="isSelectable"></el-table-column>
+                    <el-table-column prop="doneeName" label="受赠人"></el-table-column>
+                    <el-table-column prop="customerCode" label="关联客户账号"></el-table-column>
+                    <el-table-column prop="accountInfo" label="账户信息"></el-table-column>
+                    <el-table-column prop="amount" label="金额"></el-table-column>
+                    <el-table-column v-if="isAdmin" prop="createName" label="归属人"></el-table-column>
+                    <el-table-column prop="status" label="状态" :formatter="formatterStatus"></el-table-column>
+                    <el-table-column prop="giveStatus" label="赠送状态" :formatter="formatterGiveStatus"></el-table-column>
+                    <el-table-column prop="giveAuditRole" label="赠送审核人" :formatter="formatterAuditRole"></el-table-column>
+                    <el-table-column prop="remark" label="备注"></el-table-column>
+                    <el-table-column prop="createTime" label="创建时间" width="100px"></el-table-column>
+                    <el-table-column label="操作" width="300px" v-if="!isFinance">
+                        <template slot-scope="scope">
+                            <el-button :disabled="(scope.row.status == 'audit') || (['audit', 'give'].indexOf(scope.row.giveStatus) > -1)" size="mini" plain icon="el-icon-edit-outline" @click="handleEdit(scope.row)">编辑</el-button>
+                            <el-button :disabled="scope.row.status === 'audit'" size="mini" plain type="danger" icon="el-icon-delete" @click="handleDelete(scope.row.id)">删除</el-button>
+                            <el-button :disabled="(scope.row.status == 'audit') || (['audit', 'give'].indexOf(scope.row.giveStatus) > -1)" size="mini" plain type="warning" icon="el-icon-s-promotion" @click="handleSubmit(scope.row.id)">提交审核</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="24">
+                        <div style="text-align:right;padding:10px">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="page.pageNum"
+                                    :page-sizes="[10, 20, 30, 40]"
+                                    :page-size="page.pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="page.total">
+                            </el-pagination>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </el-main>
+    </el-container>
+
+    <el-dialog title="赠送记录预览" :visible.sync="dialogVisibleUpload" @closed="cancelUpload()" width="96%" :close-on-click-modal="false" top="4vh">
+        <el-table
+                v-if="uploadPage && uploadPage.list"
+                :data="uploadPage.list"
+                v-loading="uploadLoading"
+                size="mini"
+                empty-text="抱歉，未查询到相关数据"
+                stripe
+                class="table-container">
+            <el-table-column prop="doneeName" label="受赠人"></el-table-column>
+            <el-table-column prop="customerCode" label="关联客户账号"></el-table-column>
+            <el-table-column prop="accountInfo" label="账户信息"></el-table-column>
+            <el-table-column prop="amount" label="金额"></el-table-column>
+            <el-table-column prop="remark" label="备注"></el-table-column>
+            <el-table-column prop="validateMsg" label="验证信息"></el-table-column>
+        </el-table>
+        <el-row v-if="dialogVisibleUpload">
+            <el-col :xs="24" :sm="24" :md="24">
+                <div style="text-align:right;padding:10px">
+                    <el-pagination
+                            @size-change="handleUploadCustomerSizeChange"
+                            @current-change="handleUploadCustomerCurrentChange"
+                            :current-page.sync="uploadPage.pageNum"
+                            :page-sizes="[10, 20, 30, 40]"
+                            :page-size.sync="uploadPage.pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="uploadPage.total">
+                    </el-pagination>
+                </div>
+            </el-col>
+        </el-row>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="cancelUpload()">取消上传</el-button>
+            <el-button size="mini" type="primary" @click="confirmUpload()">确认上传</el-button>
+        </div>
+    </el-dialog>
+
+    <el-dialog title="编辑赠送记录" :visible.sync="dialogVisibleEdit" @closed="cancelEdit('editForm')" :close-on-click-modal="false" top="4vh">
+        <el-form :model="editFormData" ref="editForm" :rules="editFormRules"  label-width="160px">
+            <el-form-item label="受赠人" prop="doneeName">
+                <el-input v-model="editFormData.doneeName"></el-input>
+            </el-form-item>
+            <el-form-item label="关联客户账号" prop="customerCode">
+                <el-select v-model="editFormData.customerCode" filterable>
+                    <el-option v-for="item in customerList" :value="item.customer_code" :label="item.customer_code" :key="item.id" @click.native="changeCustomerCode(item, editFormData)"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="账户信息" prop="accountInfo">
+                <el-input v-model="editFormData.accountInfo"></el-input>
+            </el-form-item>
+            <el-form-item label="金额" prop="amount">
+                <el-input v-model="editFormData.amount"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="remark">
+                <el-input v-model="editFormData.remark"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="cancelEdit('editForm')">取消</el-button>
+            <el-button size="mini" type="primary" @click="confirmEdit('editForm')">确定</el-button>
+        </div>
+    </el-dialog>
+
+    <el-dialog title="新增赠送记录" :visible.sync="dialogVisibleAdd" @closed="cancelAdd('addForm')" :close-on-click-modal="false" top="4vh">
+        <el-form :model="addFormData" ref="addForm" :rules="addFormRules"  label-width="160px">
+            <el-form-item label="受赠人" prop="doneeName">
+                <el-input v-model="addFormData.doneeName"></el-input>
+            </el-form-item>
+            <el-form-item label="关联客户账号" prop="customerCode">
+                <el-select v-model="addFormData.customerCode" filterable>
+                    <el-option v-for="item in customerList" :value="item.customer_code" :label="item.customer_code" :key="item.id" @click.native="changeCustomerCode(item, addFormData)"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="账户信息" prop="accountInfo">
+                <el-input v-model="addFormData.accountInfo"></el-input>
+            </el-form-item>
+            <el-form-item label="金额" prop="amount">
+                <el-input v-model="addFormData.amount"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="remark">
+                <el-input v-model="addFormData.remark"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="cancelAdd('addForm')">取消</el-button>
+            <el-button size="mini" type="primary" @click="confirmAdd('addForm')">确定</el-button>
+        </div>
+    </el-dialog>
+</div>
+
+<script th:inline="javascript"> var ctx = [[@{/}]];</script>
+<script>
+var prefix = ctx + "system/giveRecord";
+var userPrefix = ctx + "system/user";
+var customerManagePrefix = ctx + "system/customerManage";
+var giveFlowPrefix = ctx + "system/giveFlow";
+
+var app = new Vue({
+    el: "#giveRecordList",
+    data: function () {
+        // 金额验证：大于等于0的数字
+        var validateAmount = function(rule, value, callback) {
+            if (value) {
+                var reg =  /^(([1-9]{1}\d*)|([0]{1}))(\.(\d){0,})?$/;
+                if (!reg.test(value)) {
+                    return callback(new Error('金额应为大于等于0的数字'));
+                }
+            }
+            callback();
+        };
+
+        return {
+            isAdmin: false, // 是否为管理员
+            isFinance: false, // 是否为财务人员
+            searchFormData: { // 搜索表单
+                doneeName: '',
+                accountInfo: '',
+                giveStatus: '',
+                createBy: '',
+                createTime: '',
+                startDate: '',
+                endDate: ''
+            },
+            page: { // 列表信息
+                pageNum: 1,
+                pageSize: 10,
+                total: 0,
+                list: [],
+            },
+            loading: true, // 列表信息loading，默认开启
+            dialogVisibleUpload: false, //  上传预览对话框是否显示，默认不显示
+            uploadPage: { // 上传预览列表
+                pageNum: 1,
+                pageSize: 10,
+                total: 0,
+                list: [],
+            },
+            uploadLoading: true, // 上传预览列表loading, 默认开启
+            dialogVisibleEdit: false, // 编辑对话框是否显示，默认不显示
+            editFormData: { // 编辑表单
+                doneeName: '',
+                customerCode: '',
+                accountInfo: '',
+                amount: '',
+                remark: ''
+            },
+            editFormRules: { // 编辑表单-验证规则
+                doneeName: [{required: true, message: '请输入受赠人', trigger: 'blur'}],
+                customerCode: [{required: true, message: '请选择关联客户账号', trigger: 'change'}],
+                amount: [
+                    {required: true, message: '请输入金额', trigger: 'blur'},
+                    {validator: validateAmount, trigger: 'blur'}
+                ]
+            },
+            dialogVisibleAdd: false, // 新增对话框是否显示，默认不显示
+            addFormData: { // 新增表单
+                doneeName: '',
+                customerCode: '',
+                accountInfo: '',
+                amount: '',
+                remark: ''
+            },
+            addFormRules: { // 新增表单-验证规则
+                doneeName: [{required: true, message: '请输入受赠人', trigger: 'blur'}],
+                customerCode: [{required: true, message: '请选择关联客户账号', trigger: 'change'}],
+                amount: [
+                    {required: true, message: '请输入金额', trigger: 'blur'},
+                    {validator: validateAmount, trigger: 'blur'}
+                ]
+            },
+            userList: [], // 用户列表
+            selectedData: [], // 选中的数据
+            customerList: [], // 当前用户的客户列表
+            statusList: [ // 数据变更状态列表
+                {
+                    value: 'unchanged',
+                    label: '未改变'
+                },
+                {
+                    value: 'audit',
+                    label: '审核中'
+                },
+                {
+                    value: 'refuse',
+                    label: '拒绝'
+                },
+                {
+                    value: 'completed',
+                    label: '审核完成'
+                },
+            ],
+            giveStatusList: [ // 赠送状态列表
+                {
+                    value: 'ungive',
+                    label: '未提交'
+                },
+                {
+                    value: 'audit',
+                    label: '审核中'
+                },
+                {
+                    value: 'refuse',
+                    label: '拒绝'
+                },
+                {
+                    value: 'give',
+                    label: '已赠送'
+                },
+            ]
+        }
+    },
+    mounted: function () {
+        this.getAdminPermission();
+        this.getFinancePermission()
+        this.loadData()
+        this.getUserList();
+    },
+    methods: {
+        /**
+         * 查询客户信息
+         */
+        getCustomerList: function () {
+            var _this = this
+            $.ajax({
+                url: prefix + '/queryCustomerInfo',
+                method: 'get',
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    if(res.code === 0) {
+                        _this.customerList = res.data || []
+                    }
+                }
+            })
+        },
+        /**
+         * 判断当前用户是否为管理员
+         * 是否显示"归属人"，默认不显示，管理员才显示
+         */
+        getAdminPermission: function () {
+            var _this = this
+            $.ajax({
+                url: customerManagePrefix + '/adminPermission',
+                method: 'get',
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    if(res.data === true) {
+                        _this.isAdmin = true
+                    }
+                }
+            })
+        },
+        /**
+         * 判断当前用户是否为财务人员
+         * 是财务人员不显示操作数据按钮
+         */
+        getFinancePermission: function () {
+            var _this = this
+            $.ajax({
+                url: customerManagePrefix + '/financePermission',
+                method: 'get',
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    if(res.data === true) {
+                        _this.isFinance = true
+                    }
+                }
+            })
+        },
+         /**
+         * 改变创建时间时设置“查询开始时间”和“查询结束时间”
+         */
+        changeCreateTime(daterange) {
+            if(daterange) {
+                this.searchFormData.startDate = daterange[0];
+                this.searchFormData.endDate = daterange[1];
+            }
+        },
+        /**
+         * 获取数据表格key
+         */
+        getRowKey(row) {
+            return row.id
+        },
+        /**
+         * 格式化赠送状态
+         */
+        formatterGiveStatus(row, column, cellValue, index) {
+            for(let item of this.giveStatusList) {
+                if(item.value == cellValue) {
+                    return item.label
+                }
+            }
+        },
+        /**
+         * 格式化状态
+         */
+        formatterStatus(row, column, cellValue, index) {
+            for(let item of this.statusList) {
+                if(item.value == cellValue) {
+                    return item.label
+                }
+            }
+        },
+        /**
+         * 格式化审核人
+         */
+        formatterAuditRole(row, column, cellValue, index) {
+            let res = ''
+            switch(cellValue) {
+                case 'administrator':
+                    res = '超级管理员'
+                    break
+                case 'admin':
+                    res =  '管理员'
+                    break
+                case 'finance':
+                    res =  '财务人员'
+                    break
+                default:
+                   res = '--'
+                   break
+            }
+            return res
+        },
+        /**
+         * 导出
+         */
+        handleExport: function () {
+            let str = ''
+            for(const obj in this.searchFormData) {
+                if(this.searchFormData[obj]) {
+                    str += '&' + obj + '=' + this.searchFormData[obj]
+                }
+            }
+
+            if(str) {
+                str = "?" + str.substring(1)
+            }
+
+            var aDom = document.createElement("a");
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent("click", false, false);
+            aDom.href = prefix + "/exportGiveData" + str;
+            aDom.dispatchEvent(evt);
+            aDom.click();
+        },
+        /**
+         * 改变客户信息
+         */
+        changeCustomerCode(customer, formData) {
+            console.log(customer, formData)
+            this[formData] = Object.assign(formData, {
+                customerType: customer.type,
+                customerId: customer.id
+            })
+        },
+        /**
+         * 加载列表数据
+         */
+        loadData: function () {
+            var _this = this;
+            var queryParam = {};
+            queryParam.pageNum = _this.page.pageNum;
+            queryParam.pageSize = _this.page.pageSize;
+            let {createTime, ...searchParam} = _this.searchFormData;
+            $.ajax({
+                url: prefix + "/giveList",
+                method: "POST",
+                data: Object.assign({}, queryParam, searchParam),
+                dataType: "json",
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    if(res.code === 0) {
+                        _this.loading = false;
+                        _this.page.list = res.rows;
+                        _this.page.total = res.total;
+
+                        let selectedDataIds = _this.selectedData.map(item => item.id)
+                        let tableSelectionIds = _this.$refs.multipleTable.selection.map(item => item.id)
+                        Array.isArray(res.rows) && res.rows.forEach(item => {
+                          if(selectedDataIds.includes(item.id) && !tableSelectionIds.includes(item.id)) {
+                            _this.$refs.multipleTable.toggleRowSelection(item)
+                          }
+                        })
+                    } else {
+                        _this.$message.error(res.msg || '发生错误');
+                        _this.loading = false;
+                    }
+                }
+            });
+        },
+        /**
+         * 列表-修改pageSize
+         */
+        handleSizeChange: function (val) {
+            if (this.page) {
+                this.page.pageSize = val;
+            }
+            this.loadData();
+        },
+        /**
+         * 列表-修改pageNum
+         */
+        handleCurrentChange: function (val) {
+            if (this.page) {
+                this.page.pageNum = val;
+            }
+            this.loadData();
+        },
+        /**
+         * 判断当前数据是否可选
+         */
+        isSelectable(row, index) {
+          return ['audit', 'give'].indexOf(row.giveStatus) == -1 && row.status !== 'audit'
+        },
+        /**
+         * 当用户手动勾选数据行的 Checkbox 时触发的事件
+         */
+        handleSelect(selection, row) {
+          // 如果row在selection里面→增，如果row不在selection里面→减
+          let selectionIncludeRow = selection.some(item => item.id === row.id)
+          if(selectionIncludeRow) {// 增
+            let alreadyExist = false
+            for(let i = 0; i < this.selectedData.length; i++) {
+              if(this.selectedData[i].id == row.id) {
+                alreadyExist = true
+                return
+              }
+            }
+            if(!alreadyExist) {
+              this.selectedData.push(row)
+            }
+          } else { // 减
+            if(selection.length > 0) {
+              this.selectedData = this.selectedData.filter(item => item.id !== row.id)
+            } else {
+              this.selectedData = []
+            }
+          }
+        },
+        /**
+         * 全选
+         */
+        handleSelectAll(selection){
+          this.selectedData = Object.assign([], selection)
+        },
+         /**
+         * 搜索：定位到第一页，每页10条；清空选中值
+         */
+        search: function () {
+            this.page.pageNum = 1
+            this.page.pageSize = 10
+            this.selectedData = [];
+            this.$refs.multipleTable.clearSelection();
+            this.loadData()
+        },
+        /**
+         * 重置：清空搜索条件；定位到第一页，每页10条；清空选中值
+         */
+        resetSearch: function() {
+            this.$refs['searchForm'].resetFields()
+            this.search()
+        },
+        /**
+         * 模板下载
+         */
+        downloadTemplate: function () {
+            var aDom = document.createElement("a");
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent("click", false, false);
+            aDom.href = prefix + "/downloadGiveExcel";
+            aDom.dispatchEvent(evt);
+            aDom.click();
+        },
+         /**
+         * 设置上传action
+         */
+        uploadAction: function () {
+            this.uploadPage.pageNum = 1
+            this.uploadPage.pageSize = 10
+            return prefix + "/uploadGiveExcel"
+        },
+        /**
+         * 上传成功
+         */
+        uploadSuccess: function(res,file,fileList) {
+            if(res.code === 0) {
+                this.loadUploadCustomerInfoData()
+                this.dialogVisibleUpload = true
+            } else {
+                this.$message.error(res.msg || '请求出现错误')
+            }
+            this.$refs.uploadRef.clearFiles();
+        },
+        /**
+         * 上传失败
+         */
+        uploadError: function(err,file,fileList) {
+            this.$message.error(JSON.parse(err.message).message  || '上传失败')
+            this.$refs.uploadRef.clearFiles();
+        },
+        /**
+         * 加载上传预览列表
+         */
+        loadUploadCustomerInfoData: function () {
+            var _this = this;
+            var queryParam = {};
+            queryParam.pageNum = _this.uploadPage.pageNum;
+            queryParam.pageSize = _this.uploadPage.pageSize;
+            $.ajax({
+                url: prefix + "/giveExcelList",
+                method: "POST",
+                data: queryParam,
+                dataType: "json",
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    _this.uploadLoading = false;
+                    _this.uploadPage.list = res.rows;
+                    _this.uploadPage.total = res.total;
+                }
+            });
+        },
+        /**
+         * 上传预览列表-修改pageSize
+         */
+        handleUploadCustomerSizeChange: function (val) {
+            if (this.uploadPage) {
+                this.uploadPage.pageSize = val;
+            }
+            this.loadUploadCustomerInfoData();
+        },
+        /**
+         * 上传预览列表-修改pageNum
+         */
+        handleUploadCustomerCurrentChange: function (val) {
+            if (this.uploadPage) {
+                this.uploadPage.pageNum = val;
+            }
+            this.loadUploadCustomerInfoData();
+        },
+        /**
+         * 确认上传
+         */
+        confirmUpload: function () {
+            var _this = this
+            $.ajax({
+                url: prefix + "/saveGiveExcel",
+                method: "POST",
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    _this.dialogVisibleUpload = false
+                    _this.resetSearch()
+                }
+            });
+        },
+        /**
+         * 取消上传
+         */
+        cancelUpload: function () {
+            this.dialogVisibleUpload = false
+        },
+        /**
+         * 编辑
+         */
+        handleEdit: function (row) {
+            this.getCustomerList();
+            this.editFormData = Object.assign({}, row)
+            this.dialogVisibleEdit = true
+        },
+        /**
+         * 确认编辑
+         */
+        confirmEdit: function (formName) {
+            var _this = this
+
+            _this.$refs[formName] && _this.$refs[formName].validate && _this.$refs[formName].validate(function (valid) {
+                if(valid){
+                    $.ajax({
+                        url: prefix + "/updateGiveRecord",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(_this.editFormData),
+                        dataType: "json",
+                        error: function (request) {
+                            _this.$message.error("请求出现错误");
+                        },
+                        success: function (res) {
+                            _this.dialogVisibleEdit = false;
+                            _this.resetSearch()
+                        }
+                    });
+                }
+            })
+        },
+         /**
+         * 取消编辑
+         */
+        cancelEdit: function (formName) {
+            this.dialogVisibleEdit = false
+            this.$refs[formName].resetFields()
+        },
+        /**
+         * 单条删除
+         */
+        handleDelete: function (id) {
+            let _this = this
+            _this.$confirm('确认要删除该数据吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(function() {
+                _this.confirmDelete([id]);
+            }).catch(function() {
+                console.log('取消删除操作')
+            })
+        },
+         /**
+         * 批量删除
+         */
+        handleAllDelete() {
+            let _this = this
+            console.log('选中的数据', [...new Set(_this.selectedData.map(item => item.id))])
+            _this.$confirm(`确认要删除选中的数据吗？`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(function() {
+                _this.confirmDelete([...new Set(_this.selectedData.map(item => item.id))])
+            }).catch(function() {
+                console.log('取消批量删除操作')
+            })
+        },
+        /**
+         * 确认删除
+         */
+        confirmDelete(ids) {
+            let _this = this
+            $.ajax({
+                url: prefix + "/deleteGiveRecord",
+                method: 'POST',
+                data: {'ids': ids},
+                dataType: 'json',
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    if(res.code === 0) {
+                        _this.resetSearch()
+                    } else {
+                        _this.$message.error(res.msg || '发生错误')
+                    }
+                }
+            });
+        },
+        /**
+         * 单条提交审核
+         */
+        handleSubmit: function (id) {
+            let _this = this
+            _this.$confirm('确认要将该数据提交审核吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(function() {
+                _this.confirmSubmit([id]);
+            }).catch(function() {
+                console.log('取消提交审核')
+            })
+        },
+         /**
+         * 批量提交审核
+         */
+        handleAllSubmit() {
+            let _this = this
+            console.log('选中的数据', [...new Set(_this.selectedData.map(item => item.id))])
+            _this.$confirm(`确认要将选中的数据提交审核吗？`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(function() {
+                _this.confirmSubmit([...new Set(_this.selectedData.map(item => item.id))])
+            }).catch(function() {
+                console.log('取消批量提交审核')
+            })
+        },
+        /**
+         * 确认提交审核
+         */
+        confirmSubmit(ids) {
+            let _this = this
+            $.ajax({
+                url: giveFlowPrefix + "/submitGiveAudit",
+                method: 'POST',
+                data: {'ids': ids},
+                dataType: 'json',
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    _this.resetSearch()
+                }
+            });
+        },
+        /**
+         * 新增
+         */
+        handleAdd() {
+            this.getCustomerList();
+            this.dialogVisibleAdd = true
+        },
+        /**
+         * 取消新增
+         */
+        cancelAdd: function (formName) {
+            this.dialogVisibleAdd = false
+            this.$refs[formName].resetFields()
+        },
+        /**
+         * 确认新增
+         */
+        confirmAdd: function (formName) {
+            var _this = this
+
+            _this.$refs[formName] && _this.$refs[formName].validate && _this.$refs[formName].validate(function (valid) {
+                if(valid){
+                    $.ajax({
+                        url: prefix + "/addGiveRecord",
+                        method: "POST",
+                        data: _this.addFormData,
+                        dataType: "json",
+                        error: function (request) {
+                            _this.$message.error("请求出现错误");
+                        },
+                        success: function (res) {
+                            if(res.code === 0) {
+                                _this.dialogVisibleAdd = false
+                                _this.resetSearch()
+                            } else {
+                                _this.$message.error(res.msg || '发生错误')
+                            }
+                        }
+                    });
+                }
+            })
+        },
+        /**
+        * 查询用户列表
+        */
+        getUserList() {
+            var _this = this;
+            $.ajax({
+                url: userPrefix + "/list",
+                method: "POST",
+                data: {},
+                dataType: "json",
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    _this.userList = res.rows || [];
+                }
+            });
+        },
+    }
+});
+</script>
+</body>
+</html>

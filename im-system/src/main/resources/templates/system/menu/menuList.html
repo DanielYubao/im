@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字典列表</title>
+    <link rel="stylesheet" th:href="@{/css/element-ui/index.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/vue/vue.js}"></script>
+    <script th:src="@{/js/element-ui/element.js}"></script>
+    <script th:src="@{/ruoyi/js/common.js?v=3.0.0}"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .el-dialog__wrapper .el-form-item__content {
+            width: 50%;
+        }
+        .ico-list i{
+            margin: 5px;
+            padding: 5px;
+            cursor:pointer;
+            font-size: 18px;
+            width: 28px;
+            border-radius: 3px;
+        }
+        .ico-list i:hover {
+            background-color: #1d9d74;
+            color: #ffffff;
+        }
+        .el-main{
+            margin-top: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="menuList" v-cloak>
+    <el-container>
+        <el-header>
+            <el-card>
+                <el-form :inline="true" :model="searchFormData" ref="searchForm" size="mini">
+                    <el-form-item label="菜单名称" prop="name">
+                        <el-input v-model="searchFormData.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="菜单状态" prop="visible">
+                        <el-select v-model="searchFormData.visible">
+                            <el-option label="所有" value=""></el-option>
+                            <el-option v-for="item in menuStatusList" :label="item.dictLabel" :value="item.dictValue"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+                        <el-button icon="el-icon-refresh" @click="resetForm('searchForm')">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </el-header>
+
+        <el-main>
+            <el-card>
+                <el-row class="global-operate">
+                    <el-button size="mini" type="primary" @click="add()" icon="el-icon-plus">新增</el-button>
+                </el-row>
+                <el-table :data="tableData" size="mini" v-loading="loading" empty-text="抱歉，未查询到相关数据"
+                          style="width: 100%;margin-bottom: 20px;" row-key="id"  stripe
+                          :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+                    <el-table-column prop="name" label="菜单名称"></el-table-column>
+                    <el-table-column prop="type" label="菜单类型" ></el-table-column>
+                    <el-table-column prop="permission" label="权限标识"></el-table-column>
+                    <el-table-column prop="url" label="请求地址"></el-table-column>
+                    <el-table-column prop="visible" label="菜单状态" :formatter="formatterStatus"></el-table-column>
+                    <el-table-column label="操作" width="300">
+                        <template slot-scope="scope">
+                            <el-button size="mini" plain icon="el-icon-edit-outline" @click="edit(scope.row)">编辑</el-button>
+                            <el-button size="mini" plain @click="addChild(scope.row)" icon="el-icon-plus">新增</el-button>
+                            <el-button size="mini" plain icon="el-icon-delete" @click="deleteData(scope.row)">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-card>
+        </el-main>
+    </el-container>
+
+    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="60%" @closed="handleClose('dialogForm')">
+
+        <el-dialog title="菜单选择" :visible.sync="menuDialogFormVisible" width="40%" append-to-body @closed="" >
+            <el-tree
+                    :data="dataTree"
+                    show-checkbox
+                    v-model="dialogForm.parentId"
+                    node-key="id"
+                    check-strictly
+                    default-expand-all
+                    ref="tree"
+                    :props="menuDefaultProps"
+                    @check-change="menuCheckChange">
+            </el-tree>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="mini" @click="menuDialogFormVisible = false;">取 消</el-button>
+                <el-button size="mini" type="primary" @click="chooseMenu">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-form :model="dialogForm" :rules="rules" ref="dialogForm" size="small">
+            <el-form-item label="上级菜单" prop="parentName" :label-width="formLabelWidth">
+                <div @click="clickParentMenu">
+                    <el-input v-model="dialogForm.parentName" :disabled="true" autocomplete="off"></el-input>
+                </div>
+            </el-form-item>
+            <el-form-item label="菜单类型" prop="type" :label-width="formLabelWidth">
+                <el-radio-group v-model="dialogForm.type" @change="changeType">
+                    <el-radio v-for="item in typeOptions" :label="item.dictValue"> {{item.dictLabel}}</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item label="菜单名称" prop="name" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.name" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="请求地址" prop="url" :label-width="formLabelWidth" v-if="showMenu" :rules="this.dialogForm.type == 'menu'?rules.url:[{ required: false}]" >
+                <el-input v-model="dialogForm.url" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="权限标识" prop="permission" :label-width="formLabelWidth" v-if="showPermission">
+                <el-input v-model="dialogForm.permission" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="图标" prop="icon" :label-width="formLabelWidth" v-if="showCatalog">
+                <el-input  id="icon" name="icon" type="text" v-model="dialogForm.icon" placeholder="选择图标"  autocomplete="off" @focus="focusIcon"></el-input>
+                <template>
+                    <div class="ms-parent" style="width: 100%;" v-if="showIcon">
+                        <div class="icon-drop animated flipInX" style="max-height:200px;overflow-y:auto">
+                            <div data-th-include="system/menu/icon"></div>
+                        </div>
+                    </div>
+                </template>
+            </el-form-item>
+            <el-form-item label="菜单状态" prop="visible" :label-width="formLabelWidth">
+                <el-radio-group v-model="dialogForm.visible" >
+                    <el-radio v-for="item in statusOptions" :label="item.dictValue"> {{item.dictLabel}}</el-radio>
+                </el-radio-group>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="dialogFormVisible = false; handleClose('dialogForm')">取 消</el-button>
+            <el-button size="mini" type="primary" @click="dialogFormSubmit('dialogForm')">确 定</el-button>
+        </div>
+    </el-dialog>
+</div>
+
+<script th:inline="javascript"> var ctx = [[@{/}]];</script>
+<script>
+    var prefix = ctx + "system/menu";
+
+    new Vue({
+        el: "#menuList",
+        data: function () {
+            var self = this;
+            return {
+                searchFormData: {
+                    name: '',
+                    visible: ''
+                },
+                tableData: [],
+                loading: true,
+                dialogTitle: '',
+                dialogFormVisible: false,
+                dialogForm: {
+                    id: '',
+                    parentId: '0',
+                    parentName: '主目录',
+                    name: '',
+                    type: '',
+                    url: '',
+                    permission: '',
+                    icon: '',
+                    visible: '',
+                },
+                formLabelWidth: '30%',
+                dialogFormUrl: '',
+                menuDialogFormVisible: false,
+                dataTree: [],
+                menuStatusList: [],
+                menuDefaultProps: {
+                    children: 'children',
+                    label: 'name'
+                },
+                statusOptions: null,
+                defaultStatus:null, //默认选中菜单状态
+                typeOptions: null,
+                defaultType: null, //默认选中的菜单类型
+                typeName:null,
+                showCatalog:true,
+                showPermission: false,
+                showMenu: false,
+                rules: {
+                    name: [
+                        { required: true, message: '请输入菜单名称', trigger: 'blur' },
+                    ],
+                    url:[
+                        { required: true, message: '请输入请求地址', trigger: 'blur'},
+                    ]
+
+                },
+                showIcon: false,
+            };
+        },
+        methods: {
+            /**
+             * 获取数据
+             */
+            loadData: function () {
+                var _this = this;
+                $.ajax({
+                    url: prefix + "/getTreeData",
+                    method: "POST",
+                    data: _this.searchFormData,
+                    dataType: "json",
+                    success: function (res) {
+                        _this.tableData = res;
+                        _this.loading = false;
+                    },
+                    error: function () {
+                        _this.$message.error("请求出现错误！");
+                        _this.loading = false;
+                    }
+                });
+            },
+            /**
+             * 获得菜单状态列表
+             */
+            getMenuStatusList: function(){
+                var _this = this;
+                $.ajax({
+                    url: ctx + "system/dictData/queryByDictType",
+                    method: "POST",
+                    data: { "dictType": "sys_menu_status"},
+                    dataType: "json",
+                    async : false,
+                    success: function (res) {
+                        _this.menuStatusList = res;
+                    },
+                    error: function () {
+                        _this.$message.error("请求出现错误");
+                    },
+                });
+            },
+            /**
+             * 格式化列表状态/可见
+             */
+            formatterStatus: function(val){
+                var res = "";
+                this.menuStatusList.forEach(function (item){
+                    if(item.dictValue.toString() == val.visible){
+                        res = item.dictLabel;
+                    }
+                });
+                return res;
+            },
+            /**
+             * 添加数据
+             */
+            add: function () {
+                this.dialogTitle = '添加菜单';
+                this.dialogFormVisible = true;
+                this.dialogFormUrl = prefix + "/add";
+                this.dialogForm = {
+                    parentId: '0',
+                    parentName: '主目录',
+                    visible: this.defaultStatus,
+                    type: this.defaultType,
+                };
+            },
+            /**
+             * 选择上层菜单
+             */
+            chooseMenu: function(){
+                this.menuDialogFormVisible = false
+            },
+
+            /**
+             * 编辑数据
+             */
+            edit: function (row) {
+                this.dialogForm.oldGroupName = row.groupName;
+                this.dialogTitle = '编辑组数据';
+                this.dialogFormVisible = true;
+                this.dialogFormUrl = prefix + "/edit";
+                this.dialogForm = row;
+                this.dialogForm = {
+                        id: row.id,
+                        name: row.name,
+                        type: row.type,
+                        url: row.url,
+                        permission: row.permission,
+                        icon: row.icon,
+                        visible: String(row.visible),//查出来的是number  需要转为string
+                }
+                if(row.parentId==null ||row.parentId == '0'){
+                    this.dialogForm.parentName = "主目录"
+                }
+                if(row.type == 'catalog'){//菜单类型为目录
+                    this.showCatalog = true
+                    this.showPermission = false
+                    this.showMenu = false
+
+                }else if(row.type == 'menu') {//菜单
+                    this.showCatalog = false
+                    this.showPermission = true
+                    this.showMenu = true
+                }else {//菜单
+                    this.showCatalog = false
+                    this.showPermission = true
+                    this.showMenu = false
+                }
+
+            },
+
+            /**
+             * 删除数据
+             */
+            deleteData: function (row) {
+                var _this = this;
+                if(row.children.length>0){
+                    this.$message({
+                        showClose: true,
+                        message: '该菜单下有子菜单，不可删除！',
+                        type: 'warning'
+                    });
+                }else{
+                    this.$confirm('确认要删除该数据吗？', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function () {
+                        $.ajax({
+                            url: prefix + "/remove",
+                            method: "POST",
+                            data: {'ids':row.id},
+                            dataType: "json",
+                            error: function () {
+                                _this.$message.error("请求出现错误");
+                            },
+                            success: function (response) {
+                                _this.$message.success(response.msg);
+                                _this.loadData();
+                            }
+                        });
+                    });
+                }
+            },
+            /**
+             * 批量删除
+             */
+            removeAll: function () {
+                var _this = this;
+                if (this.selectedRows.length > 0) {
+                    var ids = [];
+                    this.$confirm('确认要删除选中的' + _this.selectedRows.length + '条数据吗？', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function () {
+                        _this.selectedRows.forEach(function (row) {
+                            ids.push(row.id)
+                        });
+                        _this.handleDelete(ids);
+                    });
+                } else {
+                    _this.$message.error("请选中要删除的行！");
+                }
+            },
+
+            /**
+             * 新增子节点
+             */
+            addChild: function(row){
+                this.dialogTitle = '添加菜单';
+                this.dialogFormVisible = true;
+                this.dialogFormUrl = prefix + "/add";
+                console.log(row)
+                this.dialogForm = {
+                    parentId: row.id,
+                    parentName: row.name,
+                    visible: this.defaultStatus,
+                    type: this.defaultType,
+                };
+            },
+
+            /**
+             * 删除
+             */
+            handleDelete: function (ids) {
+                var _this = this;
+                $.ajax({
+                    url: prefix + "/remove",
+                    method: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify(ids),
+                    dataType: "json",
+                    error: function () {
+                        _this.$message.error("请求出现错误");
+                    },
+                    success: function (response) {
+                        _this.$message.success(response.msg);
+                        _this.loadData();
+                    }
+                });
+            },
+            /**
+             * 菜单选择项改变
+             */
+            menuCheckChange: function(){
+                var names = ''
+                var ids = ''
+                for(var i=0; i< this.$refs.tree.getCheckedNodes().length; i++){
+                    names=this.$refs.tree.getCheckedNodes()[i].name
+                    ids=this.$refs.tree.getCheckedNodes()[i].id
+                }
+                this.dialogForm.parentName = names;
+                this.dialogForm.parentId = ids;
+            },
+            /**
+             * 提交新增/编辑的数据
+             */
+            dialogFormSubmit: function (formName) {
+                var _this = this;
+                _this.$refs[formName].validate(function (valid) {
+                    if (valid) {
+                        $.ajax({
+                            url: _this.dialogFormUrl,
+                            method: "POST",
+                            data: _this.dialogForm,
+                            dataType: "json",
+                            success: function (response) {
+                                _this.loadData();
+                                _this.dialogFormVisible = false;
+                                _this.$message.success(response.msg);
+                            },
+                            error: function (request) {
+                                _this.$message.error("请求出现错误");
+                            }
+                        });
+                    }
+                });
+            },
+
+            handleSizeChange: function (val) {
+                if (this.page) {
+                    this.page.pageSize = val;
+                }
+                this.loadData();
+            },
+
+            handleCurrentChange: function (val) {
+                if (this.page) {
+                    this.page.pageNum = val;
+                }
+                this.loadData();
+            },
+
+            /**
+             * 查询事件
+             */
+            search: function () {
+                this.loadData();
+            },
+
+            /**
+             * 重置form表单
+             * @param formName
+             */
+            resetForm: function (formName) {
+                this.$refs[formName].resetFields();
+                this.loadData();
+            },
+            /**
+             * 点击上级菜单输入框
+             */
+            clickParentMenu: function () {
+                this.menuDialogFormVisible = true;
+                this.getTreeData();
+            },
+            /**
+             * 查询树
+             */
+            getTreeData: function(){
+                var _this = this;
+                $.ajax({
+                    url: prefix + "/getTreeData",
+                    method: "POST",
+                    data: {},
+                    dataType: "json",
+                    success: function (res) {
+                        _this.dataTree = res;
+                    },
+                    error: function () {
+                        _this.$message.error("请求出现错误");
+                    }
+                });
+            },
+
+            handleClose: function(formName){
+                this.$refs[formName].resetFields();
+                this.showCatalog = this.defaultType == 'catalog';
+                this.showPermission = this.defaultType != 'catalog';
+                this.showMenu = this.defaultType == 'menu';
+                this.showIcon = false;
+            },
+
+            /**
+             * 加载菜单状态字典
+             */
+            loadStatuOptions: function(){
+                _this = this;
+                $.ajax({
+                    url: ctx + "system/dictData/queryByDictType",
+                    method: "POST",
+                    data: {"dictType" : "sys_menu_status"},
+                    dataType: "json",
+                    async: false,
+                    error: function (request) {
+                        _this.$message.error("请求出现错误！");
+                    },
+                    success: function (res) {
+                        _this.statusOptions = res;
+                        if(res){
+                            _this.defaultStatus = res[0].dictValue;
+                        }
+                    }
+                });
+            },
+            /**
+             * 加载菜单类型字典
+             */
+            loadTypeOptions: function(){
+                _this = this;
+                var prefix1 = ctx + "system/dictData";
+                $.ajax({
+                    url: prefix1 + "/queryByDictType",
+                    method: "POST",
+                    data: {"dictType" : "sys_menu_type"},
+                    dataType: "json",
+                    async: false,
+                    error: function (request) {
+                        _this.$message.error("请求出现错误！");
+                    },
+                    success: function (res) {
+                        _this.typeOptions = res;
+                        if(res){
+                            _this.defaultType = res[0].dictValue;
+                        }
+                    }
+                });
+            },
+            changeType: function(){
+                if(this.dialogForm.type == 'catalog'){//菜单类型为目录
+                    this.showCatalog = true
+                    this.showPermission = false
+                    this.showMenu = false
+
+                }else if(this.dialogForm.type == 'menu') {//菜单
+                    this.showCatalog = false
+                    this.showPermission = true
+                    this.showMenu = true
+                }else {//菜单
+                    this.showCatalog = false
+                    this.showPermission = true
+                    this.showMenu = false
+                }
+            },
+            focusIcon: function(){
+                this.showIcon = true;
+            },
+            chooseIcon: function(e){
+                this.showIcon = false;
+                this.dialogForm.icon = e.target.className
+            },
+
+        },
+        mounted: function () {
+            this.loadData();
+            this.getMenuStatusList();
+            this.loadStatuOptions();
+            this.loadTypeOptions();
+        }
+    });
+</script>
+</body>
+</html>

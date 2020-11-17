@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组列表</title>
+    <link rel="stylesheet" th:href="@{/css/element-ui/index.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/vue/vue.js}"></script>
+    <script th:src="@{/js/element-ui/element.js}"></script>
+    <script th:src="@{/ruoyi/js/common.js?v=3.0.0}"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .el-main{
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="groupList" v-cloak>
+    <el-container>
+        <el-header>
+            <el-card>
+                <el-form :inline="true" :model="searchFormData" ref="searchForm" size="mini">
+                    <el-form-item label="名称" prop="groupName">
+                        <el-input v-model="searchFormData.groupName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="状态" prop="status">
+                        <el-select v-model="searchFormData.status" placeholder="请选择状态">
+                            <el-option label="所有" value=""></el-option>
+                            <el-option v-for="item in statusOptions" :label="item.dictLabel" :key="item.id"
+                                       :value="item.dictValue"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+                        <el-button icon="el-icon-refresh" @click="resetForm('searchForm')">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </el-header>
+
+
+        <el-main>
+            <el-card>
+                <el-row class="global-operate">
+                    <el-button size="mini" type="primary" @click="add()" icon="el-icon-plus">新增</el-button>
+                    <el-button size="mini" type="danger" @click="removeAll()" icon="el-icon-delete">批量删除
+                    </el-button>
+                </el-row>
+                <el-table :data="page.list" ref="multipleTable" @selection-change="handleSelectionChange"
+                          size="mini" empty-text="抱歉，未查询到相关数据" v-loading="loading" stripe v-if="page && page.list"
+                          class="table-container">
+                    <el-table-column type="selection"></el-table-column>
+                    <el-table-column prop="id" label="主键"></el-table-column>
+                    <el-table-column prop="groupName" label="名称"></el-table-column>
+                    <el-table-column prop="status" label="状态" :formatter="formatterStatus"></el-table-column>
+                    <el-table-column prop="remark" label="备注"></el-table-column>
+                    <el-table-column label="操作" width="200">
+                        <template slot-scope="scope">
+                            <el-button size="mini" plain icon="el-icon-edit-outline" @click="edit(scope.row)">编辑
+                            </el-button>
+                            <el-button size="mini" plain icon="el-icon-delete" @click="deleteData(scope.row.id)">删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-row class="block">
+                    <el-col :xs="24" :sm="24" :md="24">
+                        <div style="text-align:right;padding:10px">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="page.pageNum"
+                                    :page-sizes="[10, 20, 30, 40]"
+                                    :page-size="10"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="page.total">
+                            </el-pagination>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </el-main>
+    </el-container>
+
+    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" @closed="resetForm('dialogForm')">
+        <el-form :model="dialogForm" ref="dialogForm" :rules="rules" size="small">
+            <el-form-item label="名称" prop="groupName" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.groupName" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="状态" :label-width="formLabelWidth">
+                <el-radio-group v-model="dialogForm.status">
+                    <el-radio v-for="item in statusOptions" :key="item.dictValue" :label="item.dictValue">{{item.dictLabel}}</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item label="备注" prop="remark" :label-width="formLabelWidth">
+                <el-input v-model="dialogForm.remark" type="textarea" :rows="3" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="dialogFormVisible=false; resetForm('dialogForm')">取 消</el-button>
+            <el-button size="mini" type="primary" @click="dialogFormSubmit('dialogForm')">确 定</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+
+<script th:inline="javascript"> var ctx = [[@{/}]];</script>
+<script>
+    var prefix = ctx + "system/group";
+
+    new Vue({
+
+        el: "#groupList",
+        data: function () {
+            that = this;
+            var validateGroupName = function (rule, value, callback) {
+                if (value && that.dialogForm.oldGroupName != value) {
+                    $.ajax({
+                        url: prefix + "/checkGroupNameUnique",
+                        method: "POST",
+                        data: {"groupName": value},
+                        dataType: "json",
+                        async: false,
+                        error: function (request) {
+                            that.$message.error("请求出现错误");
+                        },
+                        success: function (response) {
+                            if (response > 0) {
+                                return callback(new Error('该组名称也存在！'));
+                            }
+                        }
+                    });
+                }
+                callback();
+            };
+
+            return {
+                searchFormData: {
+                    groupName: '',
+                    status: ''
+                },
+                page: {
+                    pageNum: 1,
+                    pageSize: 10,
+                    total: 0,
+                    list: []
+                },
+                loading: true,
+                dialogTitle: '',
+                dialogFormVisible: false,
+                statusOptions: null, //状态
+                defaultStatus: null,
+                dialogForm: {
+                    groupName: '',
+                    status: '',
+                    remark: ''
+                },
+                formLabelWidth: '150px',
+                dialogFormUrl: '',
+                selectedRows: [],
+                rules: {
+                    groupName: [
+                        {required: true, message: '请输入组名称', trigger: 'blur'},
+                        {min: 1, max: 30, message: '长度在1到30 个字符', trigger: 'blur'},
+                        {validator: validateGroupName, trigger: 'blur'}
+                    ]
+                }
+            };
+        },
+
+        methods: {
+            /**
+             * 获取数据
+             */
+            loadData: function () {
+                var _this = this;
+                var queryParam = {};
+                queryParam.pageNum = this.page.pageNum;
+                queryParam.pageSize = this.page.pageSize;
+                Object.assign(queryParam, _this.searchFormData);
+                $.ajax({
+                    url: prefix + "/list",
+                    method: "POST",
+                    data: queryParam,
+                    dataType: "json",
+                    error: function (request) {
+                        _this.$message.error("请求出现错误！");
+                    },
+                    success: function (response) {
+                        _this.loading = false;
+                        _this.page.list = response.rows;
+                        _this.page.total = response.total;
+                    }
+                });
+            },
+
+            /**
+             * 加载状态数据
+             */
+            loadStatusOptions: function () {
+                var _this = this;
+                $.ajax({
+                    url: ctx + "system/dictData/queryByDictType",
+                    method: "post",
+                    data: {"dictType": "sys_normal_disable"},
+                    dataType: "json",
+                    success: function (data) {
+                        _this.statusOptions = data;
+                        if (data){
+                            _this.dialogForm.status = data[0].dictValue;
+                            _this.defaultStatus = data[0].dictValue;
+                        }
+                    }
+                });
+            },
+
+            /**
+             * 状态格式化
+             */
+            formatterStatus: function (row) {
+                return selectDictLabelText(this.statusOptions, row.status);
+            },
+
+            /**
+             * 添加数据
+             */
+            add: function () {
+                debugger;
+                this.dialogTitle = '添加组数据';
+                this.dialogFormVisible = true;
+                this.dialogFormUrl = prefix + "/add";
+                this.dialogForm = {
+                    groupName: '',
+                    dictSort: '',
+                    status: '', //必须先申明，否则单选按钮不可以选择
+                    remark: ''
+                };
+                this.dialogForm.status = this.defaultStatus;
+            },
+
+            /**
+             * 编辑数据
+             */
+            edit: function (row) {
+                this.dialogForm = row;
+                this.dialogForm.oldGroupName = row.groupName;
+                this.dialogTitle = '编辑组数据';
+                this.dialogFormVisible = true;
+                this.dialogFormUrl = prefix + "/edit";
+            },
+
+            /**
+             * 删除数据
+             */
+            deleteData: function (dictDataId) {
+                var dictDataIds = [];
+                dictDataIds.push(dictDataId);
+                var _this = this;
+                this.$confirm('确认要删除该数据吗？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function () {
+                    _this.handleDelete(dictDataIds);
+                });
+
+            },
+
+            /**
+             * 批量删除
+             */
+            removeAll: function () {
+                var _this = this;
+                if (this.selectedRows.length > 0) {
+                    var ids = [];
+                    this.$confirm('确认要删除选中的' + _this.selectedRows.length + '条数据吗？', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function () {
+                        _this.selectedRows.forEach(function (row) {
+                            ids.push(row.id)
+                        });
+                        _this.handleDelete(ids);
+                    });
+                } else {
+                    _this.$message.error("请选中要删除的行！");
+                }
+            },
+
+            handleDelete: function (ids) {
+                var _this = this;
+                $.ajax({
+                    url: prefix + "/remove",
+                    method: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify(ids),
+//                    data: {"ids": ids},
+                    dataType: "json",
+                    error: function (request) {
+                        _this.$message.error("请求出现错误");
+                    },
+                    success: function (response) {
+                        _this.$message.success(response.msg);
+                        _this.loadData();
+                    }
+                });
+            },
+
+            /**
+             * 提交新增/编辑的数据
+             */
+            dialogFormSubmit: function (formName) {
+                var _this = this;
+                _this.$refs[formName].validate(function (valid) {
+                    if (valid) {
+                        $.ajax({
+                            url: _this.dialogFormUrl,
+                            method: "POST",
+                            data: _this.dialogForm,
+                            dataType: "json",
+                            success: function (response) {
+                                _this.loadData();
+                                _this.dialogFormVisible = false;
+                                _this.$message.success(response.msg);
+                            },
+                            error: function (request) {
+                                _this.$message.error("请求出现错误");
+                            }
+                        });
+                    }
+                });
+            },
+
+            handleSizeChange: function (val) {
+                if (this.page) {
+                    this.page.pageSize = val;
+                }
+                this.loadData();
+            },
+
+            handleCurrentChange: function (val) {
+                if (this.page) {
+                    this.page.pageNum = val;
+                }
+                this.loadData();
+            },
+
+            /**
+             * 修改选中行时触发
+             * @param array
+             */
+            handleSelectionChange: function (array) {
+                this.selectedRows = array;
+            },
+
+            /**
+             * 查询事件
+             */
+            search: function () {
+                this.loadData();
+            },
+
+            /**
+             * 重置form表单
+             * @param formName
+             */
+            resetForm: function (formName) {
+                this.$refs[formName].resetFields();
+                this.loadData();
+            },
+        },
+
+        mounted: function () {
+            this.loadData();
+            this.loadStatusOptions();
+        }
+
+    });
+
+</script>
+</body>
+</html>

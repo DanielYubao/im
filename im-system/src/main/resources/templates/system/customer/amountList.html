@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财务管理-佣金计算</title>
+    <link rel="stylesheet" th:href="@{/css/element-ui/index.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/vue/vue.js}"></script>
+    <script th:src="@{/js/element-ui/element.js}"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .table-container th, .table-container td {
+            text-align: center;
+        }
+        .el-dialog__body {
+            padding: 30px;
+        }
+        .el-dialog__wrapper .el-form-item__content {
+            width: 50%;
+        }
+        .el-dialog__wrapper .el-form-item__content .el-select {
+            width: 100%;
+        }
+        .el-main{
+            margin-top: 20px;
+        }
+        .global-operate .upload-box {
+            display: inline-block;
+        }
+        .amount-total-edit .el-dialog {
+            width: 540px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="amountList" v-cloak>
+    <el-container>
+        <el-header>
+            <el-card>
+                <el-form :inline="true" :model="searchFormData" ref="searchForm" size="mini">
+                    <el-form-item label="客户账号" prop="customerCode">
+                        <el-input v-model="searchFormData.customerCode"></el-input>
+                    </el-form-item>
+                    <el-form-item label="客户名称" prop="customerName">
+                        <el-input v-model="searchFormData.customerName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系方式" prop="contactInfo">
+                        <el-input v-model="searchFormData.contactInfo"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+                        <el-button icon="el-icon-refresh" @click="resetSearch">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </el-header>
+
+        <el-main>
+            <el-card>
+                <el-table
+                        v-if="page && page.list"
+                        :data="page.list"
+                        v-loading="loading"
+                        size="mini"
+                        empty-text="抱歉，未查询到相关数据"
+                        stripe
+                        class="table-container">
+<!--                    <el-table-column prop="customerCode" label="客户账号"></el-table-column>-->
+<!--                    <el-table-column prop="customerName" label="客户名称"></el-table-column>-->
+<!--                    <el-table-column prop="contact" label="联系人"></el-table-column>-->
+<!--                    <el-table-column prop="contactInfo" label="联系方式"></el-table-column>-->
+<!--                    <el-table-column prop="amountRate" label="佣金比例（%）"></el-table-column>-->
+<!--                    <el-table-column prop="customerBankCode" label="客户银行账号"></el-table-column>-->
+<!--                    <el-table-column prop="amountTotal" label="佣金总额"></el-table-column>-->
+<!--                    <el-table-column prop="amountCompute" label="返现佣金"></el-table-column>-->
+
+                        <el-table-column prop="customerCode" label="客户账号"></el-table-column>
+                        <el-table-column prop="customerName" label="客户名称"></el-table-column>
+                        <el-table-column prop="contact" label="联系人"></el-table-column>
+                        <el-table-column prop="contactInfo" label="联系方式"></el-table-column>
+                        <el-table-column prop="newAmountRate" label="新购佣金比例（%）" width="130px"></el-table-column>
+                        <el-table-column prop="newAmountTotal" label="新购佣金总额"></el-table-column>
+                        <el-table-column prop="renewAmountRate" label="续费佣金比例（%）" width="130px"></el-table-column>
+                        <el-table-column prop="renewAmountTotal" label="续费佣金总额"></el-table-column>
+                        <el-table-column prop="customerBankCode" label="客户银行账号"></el-table-column>
+                        <el-table-column prop="customerBankName" label="银行开户行"></el-table-column>
+                        <el-table-column prop="payerBankCode" label="打款人银行账号"></el-table-column>
+                        <el-table-column prop="payerName" label="打款人姓名"></el-table-column>
+
+                        <el-table-column prop="newAmountCompute" label="新购返现佣金"></el-table-column>
+                        <el-table-column prop="renewAmountCompute" label="续费返现佣金"></el-table-column>
+                    <el-table-column label="操作" width="200">
+                        <template slot-scope="scope">
+                            <el-button size="mini" plain icon="el-icon-edit-outline" @click="editAmountTotal(scope.row)">编辑佣金总额</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-row class="block">
+                    <el-col :xs="24" :sm="24" :md="24">
+                        <div style="text-align:right;padding:10px">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="page.pageNum"
+                                    :page-sizes="[10, 20, 30, 40]"
+                                    :page-size="10"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="page.total">
+                            </el-pagination>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </el-main>
+    </el-container>
+
+    <el-dialog title="编辑佣金总额" :visible.sync="dialogVisibleAmountTotalEdit" @closed="cancelEdit('amountTotalEditForm')" :close-on-click-modal="false" class="amount-total-edit">
+        <el-form :model="amountTotalEditFormData" ref="amountTotalEditForm" :rules="amountTotalEditFormRules" label-width="100px">
+            <el-form-item label="佣金总额" prop="amountTotal">
+                <el-input v-model="amountTotalEditFormData.amountTotal"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="cancelEdit('amountTotalEditForm')">取消</el-button>
+            <el-button size="mini" type="primary" @click="confirmEdit('amountTotalEditForm')">确定</el-button>
+        </div>
+    </el-dialog>
+</div>
+
+<script th:inline="javascript"> var ctx = [[@{/}]];</script>
+<script>
+var prefix = ctx + "system/customerManage";
+
+var app = new Vue({
+    el: "#amountList",
+    data: function () {
+        // 佣金总额验证：大于等于0的数字
+        var validateAmountTotal = function(rule, value, callback) {
+            if (value) {
+                var reg =  /^(([1-9]{1}\d*)|([0]{1}))(\.(\d){0,})?$/;
+                if (!reg.test(value)) {
+                    return callback(new Error('佣金总额应为大于等于0的数字'));
+                }
+            }
+            callback();
+        }
+
+        return {
+            searchFormData: { // 搜索表单
+                customerCode: '',
+                customerName: '',
+                contactInfo: ''
+            },
+            page: { // 客户信息列表
+                pageNum: 1,
+                pageSize: 10,
+                total: 0,
+                list: [],
+            },
+            loading: true, // 客户信息列表loading，默认开启
+            dialogVisibleAmountTotalEdit: false, // 编辑佣金总额对话框是否显示，默认不显示
+            amountTotalEditFormData: { // 编辑佣金总额表单
+                amountTotal: 0
+            },
+            amountTotalEditFormRules: { // 编辑佣金总额表单-验证规则
+                amountTotal: [
+                    {required: true, message: '请输入佣金总额', trigger: 'blur'},
+                    {validator: validateAmountTotal, trigger: 'blur'}
+                ]
+            }
+        }
+    },
+    mounted: function () {
+        this.loadData()
+    },
+    methods: {
+        /**
+         * 加载客户信息列表
+         */
+        loadData: function () {
+            var _this = this;
+            var queryParam = {};
+            queryParam.pageNum = _this.page.pageNum;
+            queryParam.pageSize = _this.page.pageSize;
+            $.ajax({
+                url: prefix + "/customerList",
+                method: "POST",
+                data: Object.assign({}, queryParam, _this.searchFormData),
+                dataType: "json",
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    _this.loading = false;
+                    _this.page.list = res.rows;
+                    _this.page.total = res.total;
+                }
+            });
+        },
+        /**
+         * 客户信息列表-修改pageSize
+         */
+        handleSizeChange: function (val) {
+            if (this.page) {
+                this.page.pageSize = val;
+            }
+            this.loadData();
+        },
+        /**
+         * 客户信息列表-修改pageNum
+         */
+        handleCurrentChange: function (val) {
+            if (this.page) {
+                this.page.pageNum = val;
+            }
+            this.loadData();
+        },
+        /**
+         * 搜索
+         */
+        search: function () {
+            this.loadData()
+        },
+        /**
+         * 重置：清空搜索条件
+         */
+        resetSearch: function() {
+            this.$refs['searchForm'].resetFields();
+            this.loadData()
+        },
+        /**
+         * 编辑佣金总额
+         */
+        editAmountTotal: function (row) {
+            this.amountTotalEditFormData = Object.assign({}, row)
+            this.dialogVisibleAmountTotalEdit = true
+        },
+        /**
+         * 确认编辑
+         */
+        confirmEdit: function (formName) {
+            var _this = this;
+            _this.$refs[formName] && _this.$refs[formName].validate && _this.$refs[formName].validate(function (valid) {
+                if(valid){
+                    $.ajax({
+                        url: prefix + "/updateCustomerInfo",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(_this.amountTotalEditFormData),
+                        dataType: "json",
+                        error: function (request) {
+                            _this.$message.error("请求出现错误");
+                        },
+                        success: function (res) {
+                            _this.dialogVisibleAmountTotalEdit = false
+                            _this.loadData()
+                        }
+                    });
+                }
+            })
+        },
+         /**
+         * 取消编辑
+         */
+        cancelEdit: function (formName) {
+            this.dialogVisibleAmountTotalEdit = false
+            this.$refs[formName].resetFields()
+        },
+    }
+});
+</script>
+</body>
+</html>

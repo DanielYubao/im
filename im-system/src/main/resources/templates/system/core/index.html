@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>客户信息管理系统首页</title>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/common.css}" rel="stylesheet">
+
+
+    <link rel="stylesheet" th:href="@{/css/element-ui/index.css}">
+    <link th:href="@{/ruoyi/css/ry-ui.css}" rel="stylesheet"/>
+    <link th:href="@{/ajax/libs/layui/css/layui.css}" rel="stylesheet"/>
+    <style type="text/css">
+        .nav > li:hover .dropdown-menu {
+            display: block;
+        }
+        .logo-box {
+            width: 100%;
+            height: 45px;
+            overflow: hidden;
+            display: block;
+        }
+        .logo-img {
+            height: 24px;
+            float: left;
+            margin-left: 1px;
+            margin-top: 2px;
+            display: block;
+        }
+        .page-logo, .page-logo-line {
+            height: 40px;
+            line-height: 40px;
+            background: #080b0b;
+        }
+        .page-logo a {
+            padding: 0 0 0 14px !important;
+        }
+        .page-logo a img {
+            width: 60%;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .page-logo-line {
+            margin: 0 -15px;
+        }
+        .black {
+            background: linear-gradient(-180deg, #000 80%, transparent);
+        }
+        .nav-header {
+            background: none;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        iframe {
+            background: rgb(243, 243, 244);
+        }
+    </style>
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden">
+<div id="wrapper">
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side black" role="navigation">
+        <div class="nav-close"><i class="fa fa-times-circle"></i></div>
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="page-logo">
+<!--                    <a href="javascript:;"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4yLjEsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAxODIgMzQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDE4MiAzNDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4NCgkuc3Qwe2ZpbGw6Izg2QkMyNTt9DQoJLnN0MXtmaWxsOiNGRkZGRkY7fQ0KPC9zdHlsZT4NCjxnPg0KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xNzEuOCwyOWMwLTIuNywyLjItNC44LDQuOC00LjhjMi43LDAsNC44LDIuMiw0LjgsNC44cy0yLjIsNC44LTQuOCw0LjhTMTcxLjgsMzEuNywxNzEuOCwyOSIvPg0KCTxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0yNy42LDE2LjFjMCw1LjYtMS40LDkuOC00LjQsMTIuOHMtNy4yLDQuNS0xMi42LDQuNUgwVjAuMWgxMS4yYzUuMywwLDkuMywxLjMsMTIuMSw0LjENCgkJQzI2LjIsNi45LDI3LjYsMTAuOSwyNy42LDE2LjEgTTE4LjQsMTYuNGMwLTMuMS0wLjYtNS4zLTEuOC02LjhjLTEuMS0xLjQtMy0yLjItNS40LTIuMkg4Ljh2MTguNmgyYzIuNywwLDQuNi0wLjgsNS45LTIuNA0KCQlDMTcuOCwyMiwxOC40LDE5LjYsMTguNCwxNi40Ii8+DQoJPHJlY3QgeD0iNTYuNyIgY2xhc3M9InN0MSIgd2lkdGg9IjguMyIgaGVpZ2h0PSIzMy40Ii8+DQoJPHBhdGggY2xhc3M9InN0MSIgZD0iTTkyLjQsMjAuOWMwLDQtMSw3LjItMy4yLDkuNXMtNS4yLDMuNC05LDMuNGMtMy43LDAtNi42LTEuMS04LjgtMy41Yy0yLjItMi40LTMuMy01LjUtMy4zLTkuNA0KCQljMC00LDEtNy4yLDMuMi05LjRjMi4yLTIuMyw1LjItMy40LDktMy40YzIuNCwwLDQuNSwwLjUsNi4zLDEuNWMxLjksMSwzLjIsMi41LDQuMiw0LjRDOTIsMTYuMSw5Mi40LDE4LjMsOTIuNCwyMC45IE03Ni43LDIwLjkNCgkJYzAsMi4yLDAuMywzLjcsMC44LDQuOGMwLjUsMS4xLDEuNCwxLjYsMi44LDEuNnMyLjItMC41LDIuOC0xLjZjMC41LTEuMSwwLjgtMi44LDAuOC00LjhjMC0yLjItMC4zLTMuNy0wLjgtNC44DQoJCWMtMC41LTEtMS40LTEuNi0yLjgtMS42Yy0xLjIsMC0yLjIsMC41LTIuOCwxLjZDNzcsMTcuMiw3Ni43LDE4LjcsNzYuNywyMC45Ii8+DQoJPHJlY3QgeD0iOTUuOCIgeT0iOC41IiBjbGFzcz0ic3QxIiB3aWR0aD0iOC4zIiBoZWlnaHQ9IjI0LjgiLz4NCgk8cmVjdCB4PSI5NS44IiBjbGFzcz0ic3QxIiB3aWR0aD0iOC4zIiBoZWlnaHQ9IjUuNiIvPg0KCTxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0xMjEsMjdjMS4xLDAsMi41LTAuMyw0LTAuOHY2LjNjLTEuMSwwLjUtMi4yLDAuOC0zLjIsMWMtMSwwLjItMi4yLDAuMy0zLjYsMC4zYy0yLjgsMC00LjgtMC43LTYuMS0yLjINCgkJYy0xLjItMS40LTEuOS0zLjYtMS45LTYuNVYxNC45aC0yLjlWOC41aDIuOVYyLjNsOC40LTEuNHY3LjhoNS40VjE1aC01LjR2OS42QzExOC44LDI2LjMsMTE5LjUsMjcsMTIxLDI3Ii8+DQoJPHBhdGggY2xhc3M9InN0MSIgZD0iTTE0MC40LDI3YzEuMSwwLDIuNS0wLjMsNC0wLjh2Ni4zYy0xLjEsMC41LTIuMiwwLjgtMy4yLDFjLTEsMC4yLTIuMiwwLjMtMy42LDAuM2MtMi44LDAtNC44LTAuNy02LjEtMi4yDQoJCWMtMS4yLTEuNC0xLjktMy42LTEuOS02LjVWMTQuOWgtMi45VjguNWgyLjlWMi4ybDguNC0xLjN2Ny44aDUuNFYxNWgtNS40djkuNkMxMzguMSwyNi4zLDEzOC45LDI3LDE0MC40LDI3Ii8+DQoJPHBhdGggY2xhc3M9InN0MSIgZD0iTTE2Ni44LDExYy0yLTItNC44LTIuOS04LjQtMi45Yy0zLjgsMC02LjgsMS4xLTguOSwzLjRjLTIuMSwyLjMtMy4xLDUuNS0zLjEsOS43YzAsNCwxLjEsNy4yLDMuMyw5LjQNCgkJYzIuMywyLjIsNS40LDMuMyw5LjQsMy4zYzIsMCwzLjYtMC4xLDUtMC40YzEuMy0wLjMsMi44LTAuNyw0LTEuNGwtMS4yLTUuNmMtMC45LDAuNC0xLjksMC43LTIuNywwLjljLTEuMiwwLjMtMi42LDAuNC00LDAuNA0KCQljLTEuNiwwLTIuOS0wLjQtMy44LTEuMWMtMC45LTAuOC0xLjQtMS45LTEuNC0zLjNoMTQuOXYtMy45QzE2OS44LDE1LjgsMTY4LjcsMTMsMTY2LjgsMTEgTTE1NSwxNy45YzAuMS0xLjMsMC41LTIuNCwxLjEtMw0KCQljMC42LTAuNiwxLjQtMC45LDIuNS0wLjljMSwwLDIsMC4zLDIuNiwxYzAuNiwwLjcsMC45LDEuNiwxLDIuOUgxNTV6Ii8+DQoJPHBhdGggY2xhc3M9InN0MSIgZD0iTTUwLjUsMTFjLTIuMS0yLTQuOC0yLjktOC40LTIuOWMtMy44LDAtNi44LDEuMS04LjksMy40cy0zLjEsNS41LTMuMSw5LjdjMCw0LDEuMSw3LjIsMy4zLDkuNA0KCQljMi4zLDIuMiw1LjQsMy4zLDkuNCwzLjNjMiwwLDMuNi0wLjEsNS0wLjRjMS4zLTAuMywyLjgtMC43LDQtMS40bC0xLjItNS43Yy0wLjksMC40LTEuOSwwLjctMi43LDAuOWMtMS4yLDAuMy0yLjYsMC40LTQsMC40DQoJCWMtMS42LDAtMi45LTAuNC0zLjgtMS4xYy0wLjktMC44LTEuNC0xLjktMS40LTMuM2gxNC45di0zLjhDNTMuNSwxNS44LDUyLjQsMTMsNTAuNSwxMSBNMzguNiwxNy45YzAuMS0xLjMsMC41LTIuNCwxLjEtMw0KCQlzMS40LTAuOSwyLjUtMC45czIsMC4zLDIuNiwxYzAuNiwwLjcsMC45LDEuNiwxLDIuOUgzOC42eiIvPg0KPC9nPg0KPC9zdmc+DQo=" alt="Deloitte"></a>-->
+                    <a href="javascript:;" style="font-size: 22px;">云之渝科技</a>
+                </li>
+                <li class="nav-header" style="padding: 10px 15px 10px 25px">
+<!--                    <div class="dropdown profile-element">-->
+                        <!-- <span class="logo-box">
+                            <img th:src="@{/img/logo.png}" class="logo-img"/>
+                        </span> -->
+<!--                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">-->
+<!--	                          <span class="clear">-->
+                            <span class="block m-t-xs">
+                                <a class="font-bold menuItem" th:text="${user.name}" th:href="@{'/system/user/profile/'+${user.id}}" rename="个人信息" style="font-size: 18px; color: #fff;">用户</a>
+                                <a th:href="@{logout}" style="float: right"><i class="el-icon-switch-button" title="退出"></i></a>
+                            </span>
+<!--                              <span class="text-muted text-xs block"><span>部门</span> <b class="caret"></b></span> </span>-->
+<!--                        </a>-->
+<!--                        <ul class="dropdown-menu animated fadeInRight m-t-xs">-->
+<!--                            <li><a class="menuItem" th:href="@{'/system/user/profile/'+${user.id}}">个人信息</a></li>-->
+<!--                            <li class="divider"></li>-->
+<!--                            <li><a th:href="@{logout}">退出</a></li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </li>
+                <li class="active">
+                    <!--<a href="index.html"><i class="fa fa-home"></i> <span class="nav-label">主页</span> <span class="fa arrow"></span></a>-->
+                    <!--<ul class="nav nav-second-level">-->
+                    <!--<li class="active"><a class="menuItem" href="#">首页</a></li>-->
+                    <!--</ul>-->
+                </li>
+                <li th:each="menu : ${menus}">
+                    <a href="#">
+                        <i class="fa fa fa-bar-chart-o" th:class="${menu.icon}"></i>
+                        <span class="nav-label" th:text="${menu.name}">一级菜单</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li th:each="cmenu : ${menu.children}">
+                            <a th:if="${#lists.isEmpty(cmenu.children)}" class="menuItem" th:utext="${cmenu.name}" th:href="@{${cmenu.url}}">二级菜单</a>
+                            <a th:if="${not #lists.isEmpty(cmenu.children)}" href="#">[[${cmenu.name}]]<span class="fa arrow"></span></a>
+                            <ul th:if="${not #lists.isEmpty(cmenu.children)}" class="nav nav-third-level">
+                                <li th:each="emenu : ${cmenu.children}"><a class="menuItem" th:text="${emenu.name}" th:href="@{${emenu.url}}">三级菜单</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+    <!--左侧导航结束-->
+
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="page-logo-line"></div>
+        <div class="row content-tabs">
+            <button class="roll-nav roll-left tabLeft">
+                <i class="fa fa-backward"></i>
+            </button>
+            <nav class="page-tabs menuTabs">
+                <div class="page-tabs-content">
+<!--                    <a href="javascript:;" class="active menuTab" data-id="/intelligence/customerGroup/customerIndex">首页</a>-->
+                </div>
+            </nav>
+            <button class="roll-nav roll-right tabRight">
+                <i class="fa fa-forward"></i>
+            </button>
+            <div class="btn-group roll-nav roll-right">
+                <button class="dropdown J_tabClose" data-toggle="dropdown">页签操作<span class="caret"></span></button>
+                <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                    <li><a class="tabCloseCurrent" href="javascript:void();">关闭当前</a></li>
+                    <li><a class="tabCloseOther" href="javascript:void();">关闭其他</a></li>
+                    <li><a class="tabCloseAll" href="javascript:void();">全部关闭</a></li>
+                </ul>
+            </div>
+            <a href="#" class="roll-nav roll-right tabReload"><i class="fa fa-refresh"></i>刷新</a>
+        </div>
+        <div class="row mainContent" id="content-main">
+<!--            <iframe class="RuoYi_iframe" name="iframe0" width="100%" height="100%" data-id="/intelligence/customerGroup/customerIndex" th:src="@{/intelligence/customerGroup/customerIndex}" frameborder="0" seamless></iframe>-->
+            <iframe class="RuoYi_iframe" name="iframe0" width="100%" height="100%" frameborder="0" seamless style="display: none;"></iframe>
+        </div>
+        <div class="footer">
+            <div class="pull-right">© 2020 重庆云之渝科技有限公司 Copyright</div>
+        </div>
+    </div>
+    <!--右侧部分结束-->
+</div>
+<!-- 全局js -->
+<script defer="defer" th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script defer="defer" th:src="@{/js/bootstrap.min.js}"></script>
+<script defer="defer" th:src="@{/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
+<script defer="defer" th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+<script defer="defer" th:src="@{/ajax/libs/blockUI/jquery.blockUI.js}"></script>
+<script defer="defer" th:src="@{/ruoyi/js/ry-ui.js?v=3.0.0}"></script>
+<script defer="defer" th:src="@{/ruoyi/index.js}"></script>
+<script defer="defer" th:src="@{/ajax/libs/fullscreen/jquery.fullscreen.js}"></script>
+<script defer="defer" th:src="@{/ajax/libs/layer/layer.min.js}"></script>
+<script defer="defer" th:src="@{/ajax/libs/layui/layui.js}"></script>
+<script defer="defer" th:src="@{/ruoyi/js/common.js?v=3.0.0}"></script>
+<script defer="defer" th:src="@{/ruoyi/js/ry-ui.js?v=3.0.0}"></script>
+<script defer="defer" th:src="@{/js/vue/vue.js}"></script>
+<script defer="defer" th:src="@{/js/element-ui/element.js}"></script>
+<script th:inline="javascript"> var ctx = [[@{/}]];</script>
+<script>
+    window.onload = function(){
+        var firstEle = $(".nav-second-level .menuItem").first();
+        createMenuItem(firstEle.attr('href'), $.trim(firstEle.text()));
+    }
+</script>
+</body>
+</html>

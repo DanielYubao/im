@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财务管理-打款记录审核</title>
+    <link rel="stylesheet" th:href="@{/css/element-ui/index.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/vue/vue.js}"></script>
+    <script th:src="@{/js/element-ui/element.js}"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .el-header {
+            height: auto !important;
+        }
+        .el-header .el-card .el-card__body{
+            padding-bottom: 2px;
+        }
+        .table-container th, .table-container td {
+            text-align: center;
+        }
+        .el-dialog__body {
+            padding: 30px;
+        }
+        .el-dialog__wrapper .el-form-item__content {
+            width: 50%;
+        }
+        .el-dialog__wrapper .el-form-item__content .el-select {
+            width: 100%;
+        }
+        .global-operate {
+            margin-bottom: 20px;
+        }
+        .global-operate .operate-btn {
+            display: inline-block;
+        }
+        .global-operate .operate-btn + .operate-btn {
+            margin-left: 16px;
+        }
+        .error-message {
+            color: #F56C6C;
+            font-size: 12px;
+        }
+        .el-dialog__body {
+            max-height: 68vh;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+<div id="paymentRecordList" v-cloak>
+    <el-container>
+        <el-header>
+            <el-card>
+                <el-form :inline="true" :model="searchFormData" ref="searchForm" size="mini">
+                    <el-form-item label="客户账号" prop="customerCode">
+                        <el-input v-model="searchFormData.customerCode"></el-input>
+                    </el-form-item>
+                    <el-form-item label="打款方式" prop="paymentType">
+                        <el-select v-model="searchFormData.paymentType">
+                            <el-option value="bank" label="银行卡"></el-option>
+                            <el-option value="other" label="其他"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="归属人" prop="createBy">
+                        <el-select v-model="searchFormData.createBy">
+                            <el-option v-for="item in userList" :value="item.id" :label="item.name" :key="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+                        <el-button icon="el-icon-refresh" @click="resetSearch">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </el-header>
+
+        <el-main>
+            <el-card>
+                <el-row class="global-operate">
+                    <el-button size="mini" type="primary" @click="handleAllApproved()" :disabled="selectedData.length === 0" class="operate-btn" icon="el-icon-check">批量通过</el-button>
+                    <el-button size="mini" type="warning" @click="handleAllReject()" :disabled="selectedData.length === 0" class="operate-btn" icon="el-icon-close">批量驳回</el-button>
+                </el-row>
+
+                <el-table
+                        v-if="page && page.list"
+                        :data="page.list"
+                        v-loading="loading"
+                        size="mini"
+                        empty-text="抱歉，未查询到相关数据"
+                        stripe
+                        ref="multipleTable"
+                        @select="handleSelect"
+                        @select-all="handleSelectAll"
+                        :row-key="getRowKey"
+                        class="table-container">
+                    <el-table-column type="selection" width="45" :reserve-selection="true"></el-table-column>
+                    <el-table-column prop="customerCode" label="客户账号"></el-table-column>
+                    <el-table-column prop="paymentType" label="打款方式" :formatter="formatterPaymentType"></el-table-column>
+                    <el-table-column prop="newAmount" label="新购金额"></el-table-column>
+                    <el-table-column prop="newPaymentAmount" label="新购打款金额" width="100px"></el-table-column>
+                    <el-table-column prop="renewAmount" label="续费金额"></el-table-column>
+                    <el-table-column prop="renewPaymentAmount" label="续费打款金额" width="100px"></el-table-column>
+                    <el-table-column prop="remark" label="备注说明"></el-table-column>
+                    <el-table-column prop="createName" label="归属人"></el-table-column>
+                    <el-table-column prop="createTime" label="创建时间" width="100px"></el-table-column>
+                    <el-table-column label="操作" width="180px">
+                        <template slot-scope="scope">
+                            <el-button size="mini" plain type="primary" icon="el-icon-check" @click="handleApproved(scope.row.id)">通过</el-button>
+                            <el-button size="mini" plain type="warning" icon="el-icon-close" @click="handleReject(scope.row.id)">驳回</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="24">
+                        <div style="text-align:right;padding:10px">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="page.pageNum"
+                                    :page-sizes="[10, 20, 30, 40]"
+                                    :page-size="page.pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="page.total">
+                            </el-pagination>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </el-main>
+    </el-container>
+</div>
+
+<script th:inline="javascript"> var ctx = [[@{/}]];</script>
+<script>
+var prefix = ctx + "system/paymentFlow";
+var userPrefix = ctx + "system/user";
+
+var app = new Vue({
+    el: "#paymentRecordList",
+    data: function () {
+        return {
+            searchFormData: { // 搜索表单
+                customerCode: '',
+                paymentType: '',
+                createBy: ''
+            },
+            page: { // 列表信息
+                pageNum: 1,
+                pageSize: 10,
+                total: 0,
+                list: [],
+            },
+            loading: true, // 列表信息loading，默认开启
+            selectedData: [], // 选中的数据
+            userList: [], // 用户列表
+        }
+    },
+    mounted: function () {
+        this.loadData()
+        this.getUserList();
+    },
+    methods: {
+        /**
+         * 获取数据表格key
+         */
+        getRowKey(row) {
+            return row.id
+        },
+        /**
+         * 格式化支付方式
+         */
+        formatterPaymentType(row, column, cellValue, index) {
+            let res = ''
+            switch(cellValue) {
+                case 'bank':
+                    res = '银行卡'
+                    break
+                case 'other':
+                    res =  '其他'
+                    break
+            }
+            return res
+        },
+        /**
+         * 加载列表数据
+         */
+        loadData: function () {
+            var _this = this;
+            var queryParam = {};
+            queryParam.pageNum = _this.page.pageNum;
+            queryParam.pageSize = _this.page.pageSize;
+            $.ajax({
+                url: prefix + "/paymentFlowList",
+                method: "POST",
+                data: Object.assign({}, queryParam, _this.searchFormData),
+                dataType: "json",
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    if(res.code === 0) {
+                        _this.loading = false;
+                        _this.page.list = res.rows;
+                        _this.page.total = res.total;
+
+                        let selectedDataIds = _this.selectedData.map(item => item.id)
+                        let tableSelectionIds = _this.$refs.multipleTable.selection.map(item => item.id)
+                        Array.isArray(res.rows) && res.rows.forEach(item => {
+                          if(selectedDataIds.includes(item.id) && !tableSelectionIds.includes(item.id)) {
+                            _this.$refs.multipleTable.toggleRowSelection(item)
+                          }
+                        })
+                    } else {
+                        _this.$message.error(res.msg || '发生错误');
+                        _this.loading = false;
+                    }
+                }
+            });
+        },
+        /**
+         * 列表-修改pageSize
+         */
+        handleSizeChange: function (val) {
+            if (this.page) {
+                this.page.pageSize = val;
+            }
+            this.loadData();
+        },
+        /**
+         * 列表-修改pageNum
+         */
+        handleCurrentChange: function (val) {
+            if (this.page) {
+                this.page.pageNum = val;
+            }
+            this.loadData();
+        },
+        /**
+         * 当用户手动勾选数据行的 Checkbox 时触发的事件
+         */
+        handleSelect(selection, row) {
+          // 如果row在selection里面→增，如果row不在selection里面→减
+          let selectionIncludeRow = selection.some(item => item.id === row.id)
+          if(selectionIncludeRow) {// 增
+            let alreadyExist = false
+            for(let i = 0; i < this.selectedData.length; i++) {
+              if(this.selectedData[i].id == row.id) {
+                alreadyExist = true
+                return
+              }
+            }
+            if(!alreadyExist) {
+              this.selectedData.push(row)
+            }
+          } else { // 减
+            if(selection.length > 0) {
+              this.selectedData = this.selectedData.filter(item => item.id !== row.id)
+            } else {
+              this.selectedData = []
+            }
+          }
+        },
+        /**
+         * 全选
+         */
+        handleSelectAll(selection){
+          this.selectedData = Object.assign([], selection)
+        },
+         /**
+         * 搜索：定位到第一页，每页10条；清空选中值
+         */
+        search: function () {
+            this.page.pageNum = 1
+            this.page.pageSize = 10
+            this.$refs.multipleTable.clearSelection()
+            this.selectedData = []
+            this.loadData()
+        },
+        /**
+         * 重置：清空搜索条件；定位到第一页，每页10条；清空选中值
+         */
+        resetSearch: function() {
+            this.$refs['searchForm'].resetFields()
+            this.page.pageNum = 1
+            this.page.pageSize = 10
+            this.$refs.multipleTable.clearSelection()
+            this.selectedData = []
+            this.loadData()
+        },
+        /**
+         * 单条通过
+         */
+        handleApproved: function (id) {
+            let _this = this
+            _this.$confirm('确认通过此条数据的审核申请吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(function() {
+                _this.confirmApproved([id]);
+            }).catch(function() {
+                console.log('取消通过操作')
+            })
+        },
+        /**
+         * 批量通过
+         */
+        handleAllApproved() {
+            let _this = this
+            console.log('选中的数据', [...new Set(_this.selectedData.map(item => item.id))])
+            _this.$confirm(`确认通过选中的数据的审核申请吗？`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(function() {
+                _this.confirmApproved([...new Set(_this.selectedData.map(item => item.id))])
+            }).catch(function() {
+                console.log('取消批量通过操作')
+            })
+        },
+        /**
+         * 确认通过
+         */
+        confirmApproved(ids) {
+            $.ajax({
+                url: prefix + "/auditPaymentFlow",
+                method: 'POST',
+                data: {'ids': ids, 'auditType': 'approve'},
+                dataType: 'json',
+                error: err => {
+                    this.$message.error("请求出现错误");
+                },
+                success: res => {
+                    if(res.code === 0) {
+                        this.resetSearch()
+                    } else {
+                        this.$message.error(res.msg || '发生错误')
+                    }
+                }
+            });
+        },
+        /**
+         * 单条驳回
+         */
+        handleReject: function (id) {
+            let _this = this
+            _this.$confirm('确认驳回此条数据的审核申请吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(function() {
+                _this.confirmReject([id]);
+            }).catch(function() {
+                console.log('取消驳回操作')
+            })
+        },
+        /**
+         * 批量驳回
+         */
+        handleAllReject() {
+            let _this = this
+            console.log('选中的数据', [...new Set(_this.selectedData.map(item => item.id))])
+            _this.$confirm(`确认驳回选中的数据的审核申请吗？`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(function() {
+                _this.confirmReject([...new Set(_this.selectedData.map(item => item.id))])
+            }).catch(function() {
+                console.log('取消批量驳回操作')
+            })
+        },
+        /**
+         * 确认驳回
+         */
+        confirmReject(ids) {
+            $.ajax({
+                url: prefix + "/auditPaymentFlow",
+                method: 'POST',
+                data: {'ids': ids, 'auditType': 'refuse'},
+                dataType: 'json',
+                error: err => {
+                    this.$message.error("请求出现错误");
+                },
+                success: res => {
+                    if(res.code === 0) {
+                        this.resetSearch()
+                    } else {
+                        this.$message.error(res.msg || '发生错误')
+                    }
+                }
+            });
+        },
+        /**
+        * 查询用户列表
+        */
+        getUserList() {
+            var _this = this;
+            $.ajax({
+                url: userPrefix + "/list",
+                method: "POST",
+                data: {},
+                dataType: "json",
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    _this.userList = res.rows || [];
+                }
+            });
+        },
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.deloitte.system.mapper.customer.GiveRecordMapper">
+    <resultMap id="BaseResultMap" type="com.deloitte.system.model.customer.GiveRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="customer_code" property="customerCode" jdbcType="VARCHAR"/>
+        <result column="customer_id" property="customerId" jdbcType="BIGINT"/>
+        <result column="customer_type" property="customerType" jdbcType="VARCHAR"/>
+        <result column="donee_name" property="doneeName" jdbcType="VARCHAR"/>
+        <result column="account_info" property="accountInfo" jdbcType="VARCHAR"/>
+        <result column="amount" property="amount" jdbcType="DOUBLE"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="give_status" property="giveStatus" jdbcType="VARCHAR"/>
+        <result column="give_audit_role" property="giveAuditRole" jdbcType="VARCHAR"/>
+        <result column="audit_role" property="auditRole" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="BIGINT"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="disable_flag" property="disableFlag" jdbcType="INTEGER"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="create_name" property="createName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    g.id, customer_code, customer_id, customer_type, donee_name, account_info, amount,
+    remark, give_status, give_audit_role, audit_role, g.status, g.create_by, g.create_time,
+    g.update_by, g.update_time, g.disable_flag, g.delete_flag, u.name create_name
+    from give_record g left join sys_users u on g.create_by = u.id
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        where g.id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from give_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.deloitte.system.model.customer.GiveRecord">
+    insert into give_record (id, customer_code, customer_id, 
+      customer_type, donee_name, account_info, 
+      amount, remark, give_status, 
+      give_audit_role, audit_role, status, 
+      create_by, create_time, update_by, 
+      update_time, disable_flag, delete_flag
+      )
+    values (#{id,jdbcType=BIGINT}, #{customerCode,jdbcType=VARCHAR}, #{customerId,jdbcType=BIGINT}, 
+      #{customerType,jdbcType=VARCHAR}, #{doneeName,jdbcType=VARCHAR}, #{accountInfo,jdbcType=VARCHAR}, 
+      #{amount,jdbcType=DOUBLE}, #{remark,jdbcType=VARCHAR}, #{giveStatus,jdbcType=VARCHAR}, 
+      #{giveAuditRole,jdbcType=VARCHAR}, #{auditRole,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{disableFlag,jdbcType=INTEGER}, #{deleteFlag,jdbcType=INTEGER}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.deloitte.system.model.customer.GiveRecord">
+        insert into give_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="customerCode != null">
+                customer_code,
+            </if>
+            <if test="customerId != null">
+                customer_id,
+            </if>
+            <if test="customerType != null">
+                customer_type,
+            </if>
+            <if test="doneeName != null">
+                donee_name,
+            </if>
+            <if test="accountInfo != null">
+                account_info,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="giveStatus != null">
+                give_status,
+            </if>
+            <if test="giveAuditRole != null">
+                give_audit_role,
+            </if>
+            <if test="auditRole != null">
+                audit_role,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="disableFlag != null">
+                disable_flag,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="customerCode != null">
+                #{customerCode,jdbcType=VARCHAR},
+            </if>
+            <if test="customerId != null">
+                #{customerId,jdbcType=BIGINT},
+            </if>
+            <if test="customerType != null">
+                #{customerType,jdbcType=VARCHAR},
+            </if>
+            <if test="doneeName != null">
+                #{doneeName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountInfo != null">
+                #{accountInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null">
+                #{amount,jdbcType=DOUBLE},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="giveStatus != null">
+                #{giveStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="giveAuditRole != null">
+                #{giveAuditRole,jdbcType=VARCHAR},
+            </if>
+            <if test="auditRole != null">
+                #{auditRole,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=BIGINT},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="disableFlag != null">
+                #{disableFlag,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.deloitte.system.model.customer.GiveRecord">
+        update give_record
+        <set>
+            <if test="customerCode != null">
+                customer_code = #{customerCode,jdbcType=VARCHAR},
+            </if>
+            <if test="customerId != null">
+                customer_id = #{customerId,jdbcType=BIGINT},
+            </if>
+            <if test="customerType != null">
+                customer_type = #{customerType,jdbcType=VARCHAR},
+            </if>
+            <if test="doneeName != null">
+                donee_name = #{doneeName,jdbcType=VARCHAR},
+            </if>
+            <if test="accountInfo != null">
+                account_info = #{accountInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null">
+                amount = #{amount,jdbcType=DOUBLE},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="giveStatus != null">
+                give_status = #{giveStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="giveAuditRole != null">
+                give_audit_role = #{giveAuditRole,jdbcType=VARCHAR},
+            </if>
+            <if test="auditRole != null">
+                audit_role = #{auditRole,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=BIGINT},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="disableFlag != null">
+                disable_flag = #{disableFlag,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.deloitte.system.model.customer.GiveRecord">
+    update give_record
+    set customer_code = #{customerCode,jdbcType=VARCHAR},
+      customer_id = #{customerId,jdbcType=BIGINT},
+      customer_type = #{customerType,jdbcType=VARCHAR},
+      donee_name = #{doneeName,jdbcType=VARCHAR},
+      account_info = #{accountInfo,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DOUBLE},
+      remark = #{remark,jdbcType=VARCHAR},
+      give_status = #{giveStatus,jdbcType=VARCHAR},
+      give_audit_role = #{giveAuditRole,jdbcType=VARCHAR},
+      audit_role = #{auditRole,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      disable_flag = #{disableFlag,jdbcType=INTEGER},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="saveGiveExcel" parameterType="Long">
+    insert into give_record(customer_code, customer_id, customer_type, donee_name, account_info, amount, remark, create_by, create_time, update_by)
+    select customer_code, customer_id, customer_type, donee_name, account_info, amount, remark,  create_by, create_time, create_by
+    from give_record_excel where create_by=#{userId,jdbcType=BIGINT} and validate_flag = 1
+  </select>
+
+    <select id="selectList" parameterType="com.deloitte.system.model.customer.GiveRecord" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        <where>
+            and g.delete_flag = 0
+            <if test="doneeName != null and doneeName != '' ">and g.donee_name like concat('%',
+                #{doneeName,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="accountInfo != null and accountInfo != '' ">and g.account_info like concat('%',
+                #{accountInfo,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="startDate != null and startDate != ''">and g.create_time &gt;= #{startDate,jdbcType=VARCHAR}</if>
+            <if test="endDate != null and endDate != ''">and g.create_time &lt;= #{endDate,jdbcType=VARCHAR}</if>
+            <if test="createBy != null and createBy != '' ">and g.create_by = #{createBy,jdbcType=BIGINT}</if>
+            <if test="giveStatus != null and giveStatus != '' ">and g.give_status =
+                #{giveStatus,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectExportData" parameterType="com.deloitte.system.model.customer.GiveRecord" resultType="map">
+
+        select g.id, g.customer_code, g.customer_id, g.customer_type, g.donee_name, g.account_info,
+        g.amount, g.remark, g.give_status, g.give_audit_role, g.status, g.create_by,
+        DATE_FORMAT(g.create_time, '%Y-%m-%d') create_time, u.name create_name,
+        if(g.customer_type='channel',ci.channel_bank_code,c.customer_bank_code) customer_bank_code,
+        if(g.customer_type='channel',ci.payment_code,c.payment_code) payment_code,
+        if(g.customer_type='channel',ci.channel_bank_name,c.customer_bank_name) customer_bank_name,
+        if(g.customer_type='channel',ci.payment_type,c.payment_type) payment_type
+        from give_record g left join sys_users u on g.create_by = u.id
+        LEFT JOIN customer_info c ON c.id = g.customer_id
+        LEFT JOIN channel_customer_info cc on cc.id = g.customer_id
+        LEFT JOIN channel_info ci on ci.id = cc.channel_id
+        <where>
+            and g.delete_flag = 0
+            <if test="doneeName != null and doneeName != '' ">and g.donee_name like concat('%',
+                #{doneeName,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="accountInfo != null and accountInfo != '' ">and g.account_info like concat('%',
+                #{accountInfo,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="startDate != null and startDate != ''">and g.create_time &gt;= #{startDate,jdbcType=VARCHAR}</if>
+            <if test="endDate != null and endDate != ''">and g.create_time &lt;= #{endDate,jdbcType=VARCHAR}</if>
+            <if test="createBy != null and createBy != '' ">and g.create_by = #{createBy,jdbcType=BIGINT}</if>
+            <if test="giveStatus != null and giveStatus != '' ">and g.give_status =
+                #{giveStatus,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteGiveRecord" parameterType="Long">
+        update give_record set delete_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="updateStatus">
+        update give_record set status = #{status}, update_time = now() where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="updateAuditInfo">
+        update give_record set give_status = #{auditStatus}, give_audit_role = #{auditRole}, update_time = now()
+        where give_status = 'audit' and id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectGiveFlowList" parameterType="com.deloitte.system.model.customer.PaymentRecord"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        <where>
+            and g.delete_flag = 0 and g.give_status ='audit' and g.status != 'audit'
+            <if test="doneeName != null and doneeName != '' ">and g.donee_name like concat('%',
+                #{doneeName,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="accountInfo != null and accountInfo != '' ">and g.account_info like concat('%',
+                #{accountInfo,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="startDate != null and startDate != ''">and g.create_time &gt;= #{startDate,jdbcType=VARCHAR}</if>
+            <if test="endDate != null and endDate != ''">and g.create_time &lt;= #{endDate,jdbcType=VARCHAR}</if>
+            <if test="createBy != null and createBy != '' ">and g.create_by = #{createBy,jdbcType=BIGINT}</if>
+            <if test="giveAuditRole != null and giveAuditRole != '' ">and g.give_audit_role = #{giveAuditRole,jdbcType=VARCHAR}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="giveInfoData" parameterType="com.deloitte.system.model.customer.GiveRecord" resultType="map">
+        SELECT * FROM
+        (
+        SELECT COUNT(DISTINCT customer_id, customer_type)  accountNum from give_record WHERE delete_flag = 0
+        <if test=" adminFlag == false and createBy != null and createBy != '' ">and create_by =
+            #{createBy,jdbcType=BIGINT}
+        </if>
+        ) t
+        LEFT JOIN
+        (
+        SELECT IFNULL(SUM(amount),0) amountTotal from give_record WHERE delete_flag = 0
+        <if test="doneeName != null and doneeName != '' ">and donee_name like concat('%', #{doneeName,jdbcType=VARCHAR},
+            '%')
+        </if>
+        <if test="createBy != null and createBy != '' ">and create_by = #{createBy,jdbcType=BIGINT}</if>
+        <if test="startDate != null and startDate != ''">and create_time &gt;= #{startDate,jdbcType=VARCHAR}</if>
+        <if test="endDate != null and endDate != ''">and create_time &lt;= #{endDate,jdbcType=VARCHAR}</if>
+        ) t1
+        ON 1=1
+    </select>
+
+    <select id="queryCustomerInfo" parameterType="long" resultType="map">
+        SELECT id, customer_code, "channel" type from channel_customer_info where create_by =  #{userId,jdbcType=BIGINT}
+        UNION ALL
+        SELECT id, CAST(AES_DECRYPT(UNHEX(customer_code),'1')as char) customer_code, "direct" type from  customer_info where create_by =  #{userId,jdbcType=BIGINT}
+    </select>
+
+    <update id="submitGiveAudit">
+        update give_record set give_status = 'audit', give_audit_role = 'finance', update_by = #{userId},
+        update_time = now()
+        where give_status in('ungive','refuse') and id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+</mapper>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head>
+    	<meta charset="utf-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <title>客户信息管理系统</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+        <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
+        <link rel="stylesheet" th:href="@{/css/login.min.css}" />
+        <link rel="stylesheet" th:href="@{/css/style.css}" />
+        <style type="text/css">
+	        label.error { position:inherit;  }
+	        .particles {
+	            position: absolute;
+	            top: 0; left: 0;
+	            width: 100%; height: 100%;
+	            overflow: hidden;
+	            background: url(./img/login_hp_bg.jpg) no-repeat #000;
+	            background-size: cover;
+	        }
+	        .bg2 {
+	            position: absolute;
+	            top: 50%; left: 50%;
+	            transform: translate(-20%, -50%);
+	            width: 460px; height: 460px;
+	            background: url(./img/login_hp_1.png) no-repeat;
+	            background-size: 460px 460px;
+	        }
+	        .signinpanel {
+	            position: absolute;
+	            top: 50%; left: 20%;
+	            transform: translateY(-50%);
+	            margin: 0;
+	            width: 300px;
+	        }
+	        .signinpanel .form {
+	            padding: 30px 24px 16px 30px;
+	            color: #000;
+	            background: rgba(255,255,255,1);
+	        }
+	        .logo {
+	            width: 172px;
+	            padding-bottom: 25px;
+	        }
+	        .logo img { width: 100%;}
+	        .icheckbox_square-green-login {
+	            background-position: -72px 0;
+	        }
+	    </style>
+	</head>
+    <body>        
+       <div id="particles-js" class="particles">
+	        <div class="bg2"></div>
+	        <div class="signinpanel">
+	            <!-- <span class="tips-logo">Smart Data</span> -->
+	            <div class="row">
+	                <form id="signupForm" class="form" th:action="@{/login}" method="post">
+	                    <div class="logo">
+	                        <img src="data:image/png;base64,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"
+	                            alt="Deloitte">
+	                    </div>
+	                    <input type="text"     name="username" class="form-control uname"     placeholder="用户名" autocomplete="off"/>
+	                    <input type="password" name="password" class="form-control pword m-b" placeholder="密码" autocomplete="new-password"/>
+	                    <div style="width:100%;height:15px">
+	                    	<p style="color: red" th:if="${param.error}" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}" class="error"></p>
+	                    </div>
+	                    <!--<input class="i-checks" type="checkbox" name="rememberme" />&nbsp;&nbsp;记住我  -->
+	                    <input type="submit" class="btn btn-success btn-block" id="btnSubmit" value="登录"/>
+	                    <div style="width:100%;height:15px"></div>
+	                </form>
+	            </div>
+	        </div>
+	    </div>  
+    </body>
+</html>

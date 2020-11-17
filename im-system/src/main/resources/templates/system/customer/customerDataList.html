@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统计管理-客户信息统计</title>
+    <link rel="stylesheet" th:href="@{/css/element-ui/index.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/vue/vue.js}"></script>
+    <script th:src="@{/js/element-ui/element.js}"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .table-container th, .table-container td {
+            text-align: center;
+        }
+        .el-dialog__body {
+            padding: 30px;
+        }
+        .el-dialog__wrapper .el-form-item__content {
+            width: 50%;
+        }
+        .el-dialog__wrapper .el-form-item__content .el-select {
+            width: 100%;
+        }
+        .global-operate {
+            margin-bottom: 20px;
+        }
+        .global-operate .operate-btn {
+            display: inline-block;
+        }
+        .global-operate .operate-btn + .operate-btn {
+            margin-left: 16px;
+        }
+        .error-message {
+            color: #F56C6C;
+            font-size: 12px;
+        }
+        .el-dialog__body {
+            max-height: 68vh;
+            overflow: auto;
+        }
+        .el-form-item.hidden {
+            display: none;
+        }
+        .el-row.statistics-box {
+            margin-top: 30px;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding: 20px 10px 0;
+        }
+        .el-row.statistics-box .el-card__body {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<div id="customerDataList" v-cloak>
+    <el-container>
+        <el-header>
+            <el-card>
+                <el-form :inline="true" :model="searchFormData" ref="searchForm" size="mini">
+                    <el-form-item label="客户账号" prop="customerCode">
+                        <el-input v-model="searchFormData.customerCode"></el-input>
+                    </el-form-item>
+                    <el-form-item label="客户名称" prop="customerName">
+                        <el-input v-model="searchFormData.customerName"></el-input>
+                    </el-form-item>
+                    <el-form-item v-if="isAdmin" label="归属人" prop="createBy">
+                        <el-select v-model="searchFormData.createBy">
+                            <el-option v-for="item in userList" :value="item.id" :label="item.name" :key="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="创建时间" prop="createTime">
+                        <el-date-picker
+                                v-model="searchFormData.createTime"
+                                @change="changeCreateTime"
+                                type="daterange"
+                                range-separator="至"
+                                value-format="yyyy-MM-dd"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item class="hidden" label="查询开始时间" prop="startDate">
+                        <el-input v-model="searchFormData.startDate"></el-input>
+                    </el-form-item>
+                    <el-form-item class="hidden" label="查询结束时间" prop="endDate">
+                        <el-input v-model="searchFormData.endDate"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+                        <el-button icon="el-icon-refresh" @click="resetSearch">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </el-header>
+
+        <el-row class="statistics-box" :gutter="20">
+            <el-col :span="6">
+                <el-card>
+                    <label>客户账号总数</label>
+                    <p>{{statisticsData.customerAccountNum}}</p>
+                </el-card>
+            </el-col>
+            <el-col :span="6">
+                <el-card>
+                    <label>客户总数</label>
+                    <p>{{statisticsData.customerNum}}</p>
+                </el-card>
+            </el-col>
+            <el-col :span="6">
+                <el-card>
+                    <label>新购佣金总额</label>
+                    <p>{{statisticsData.newAmountTotal}}</p>
+                </el-card>
+            </el-col>
+            <el-col :span="6">
+                <el-card>
+                    <label>续费佣金总额</label>
+                    <p>{{statisticsData.renewAmountTotal}}</p>
+                </el-card>
+            </el-col>
+        </el-row>
+
+        <el-main>
+            <el-card>
+                <el-table
+                        v-if="page && page.list"
+                        :data="page.list"
+                        v-loading="loading"
+                        size="mini"
+                        empty-text="抱歉，未查询到相关数据"
+                        stripe
+                        class="table-container">
+                    <el-table-column prop="customerCode" label="客户账号"></el-table-column>
+                    <el-table-column prop="customerName" label="客户名称"></el-table-column>
+                    <el-table-column prop="contact" label="联系人"></el-table-column>
+                    <el-table-column prop="contactInfo" label="联系方式"></el-table-column>
+                    <el-table-column prop="newAmountRate" label="新购佣金比例（%）" width="130px"></el-table-column>
+                    <el-table-column prop="newAmountTotal" label="新购佣金总额" width="110px"></el-table-column>
+                    <el-table-column prop="renewAmountRate" label="续费佣金比例（%）" width="130px"></el-table-column>
+                    <el-table-column prop="renewAmountTotal" label="续费佣金总额" width="110px"></el-table-column>
+                    <el-table-column prop="customerBankCode" label="客户银行账号" width="200px"></el-table-column>
+                    <el-table-column prop="customerBankName" label="银行开户行"></el-table-column>
+                    <el-table-column prop="payerBankCode" label="打款人银行账号" width="200px"></el-table-column>
+                    <el-table-column prop="payerName" label="打款人姓名"></el-table-column>
+                    <el-table-column prop="createTime" label="创建时间" width="180px"></el-table-column>
+                    <el-table-column v-if="isAdmin" prop="createName" label="归属人"></el-table-column>
+                </el-table>
+
+                <el-row>
+                    <el-col :xs="24" :sm="24" :md="24">
+                        <div style="text-align:right;padding:10px">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="page.pageNum"
+                                    :page-sizes="[10, 20, 30, 40]"
+                                    :page-size="page.pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="page.total">
+                            </el-pagination>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </el-main>
+    </el-container>
+</div>
+
+<script th:inline="javascript"> var ctx = [[@{/}]];</script>
+<script>
+var prefix = ctx + "system/customerManage";
+var userPrefix = ctx + "system/user";
+var customerManagePrefix = ctx + "system/customerManage";
+
+var app = new Vue({
+    el: "#customerDataList",
+    data: function () {
+        return {
+            isAdmin: false, // 是否为管理员
+            searchFormData: { // 搜索表单
+                customerCode: '',
+                customerName: '',
+                createTime: '',
+                startDate: '',
+                endDate: ''
+            },
+            page: { // 列表信息
+                pageNum: 1,
+                pageSize: 10,
+                total: 0,
+                list: [],
+            },
+            loading: true, // 列表信息loading，默认开启
+            statisticsData: {}, // 统计数据
+            userList: [], // 用户列表
+        }
+    },
+     mounted: function () {
+        this.getAdminPermission();
+        this.loadData();
+        this.loadStatisticsData();
+        this.getUserList();
+    },
+    methods: {
+        /**
+         * 判断当前用户是否为管理员
+         * 是否显示"归属人"，默认不显示，管理员才显示
+         */
+        getAdminPermission: function () {
+            var _this = this
+            $.ajax({
+                url: customerManagePrefix + '/adminPermission',
+                method: 'get',
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    if(res.data === true) {
+                        _this.isAdmin = true
+                    }
+                }
+            })
+        },
+         /**
+         * 改变创建时间时设置“查询开始时间”和“查询结束时间”
+         */
+        changeCreateTime(daterange) {
+            this.searchFormData.startDate = daterange[0];
+            this.searchFormData.endDate = daterange[1];
+        },
+        /**
+         * 加载客户信息列表
+         */
+        loadData: function () {
+            var _this = this;
+            var queryParam = {};
+            queryParam.pageNum = _this.page.pageNum;
+            queryParam.pageSize = _this.page.pageSize;
+            let {createTime, ...searchParam} = _this.searchFormData
+            $.ajax({
+                url: prefix + "/customerList",
+                method: "POST",
+                data: Object.assign({}, queryParam, searchParam),
+                dataType: "json",
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (res) {
+                    _this.loading = false;
+                    _this.page.list = res.rows;
+                    _this.page.total = res.total;
+                }
+            });
+        },
+        /**
+         * 客户信息列表-修改pageSize
+         */
+        handleSizeChange: function (val) {
+            if (this.page) {
+                this.page.pageSize = val;
+            }
+            this.loadData();
+        },
+        /**
+         * 客户信息列表-修改pageNum
+         */
+        handleCurrentChange: function (val) {
+            if (this.page) {
+                this.page.pageNum = val;
+            }
+            this.loadData();
+        },
+        /**
+         * 搜索：定位到第一页，每页10条
+         */
+        search: function () {
+            this.page.pageNum = 1
+            this.page.pageSize = 10
+            this.loadData()
+            this.loadStatisticsData();
+        },
+        /**
+         * 重置：清空搜索条件；定位到第一页，每页10条
+         */
+        resetSearch: function() {
+            this.$refs['searchForm'].resetFields()
+            this.page.pageNum = 1
+            this.page.pageSize = 10
+            this.loadData()
+            this.loadStatisticsData();
+        },
+        /**
+         * 加载统计数据
+         */
+        loadStatisticsData() {
+            let {createTime, ...searchParam} = this.searchFormData
+            $.ajax({
+                url: prefix + "/customerInfoData",
+                method: "POST",
+                data: searchParam,
+                dataType: "json",
+                error: request => {
+                    this.$message.error("请求出现错误");
+                },
+                success: res => {
+                   this.statisticsData = res.data || {};
+                }
+            });
+        },
+        /**
+         * 查询用户列表
+         */
+        getUserList() {
+            var _this = this;
+            $.ajax({
+                url: userPrefix + "/list",
+                method: "POST",
+                data: {},
+                dataType: "json",
+                error: function (request) {
+                    _this.$message.error("请求出现错误");
+                },
+                success: function (response) {
+                    _this.userList = response.rows || [];
+                }
+            });
+        },
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deloitte.system.mapper.sys.RoleMenuRelMapper">
+    
+    <resultMap type="RoleMenuRel" id="RoleMenuRelResult">
+        <result property="id"    column="id"    />
+        <result property="roleId"    column="role_id"    />
+        <result property="menuId"    column="menu_id"    />
+    </resultMap>
+	
+	<sql id="selectRoleMenuRelVo">
+        select id, role_id, menu_id from sys_role_menu_rel
+    </sql>
+	
+    <select id="selectRoleMenuRelList" parameterType="RoleMenuRel" resultMap="RoleMenuRelResult">
+        <include refid="selectRoleMenuRelVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="roleId != null "> and role_id = #{roleId}</if>
+             <if test="menuId != null "> and menu_id = #{menuId}</if>
+         </where>
+    </select>
+    
+    <select id="selectRoleMenuRelById" parameterType="Long" resultMap="RoleMenuRelResult">
+        <include refid="selectRoleMenuRelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRoleMenuRel" parameterType="RoleMenuRel">
+        insert into sys_role_menu_rel
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="roleId != null  ">role_id,</if>
+			<if test="menuId != null  ">menu_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="roleId != null  ">#{roleId},</if>
+			<if test="menuId != null  ">#{menuId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateRoleMenuRel" parameterType="RoleMenuRel">
+        update sys_role_menu_rel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roleId != null  ">role_id = #{roleId},</if>
+            <if test="menuId != null  ">menu_id = #{menuId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteRoleMenuRelById" parameterType="Long">
+        delete from sys_role_menu_rel where id = #{id}
+    </delete>
+	
+    <delete id="deleteRoleMenuRelByIds" parameterType="Long">
+        delete from sys_role_menu_rel where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertRoleMenuRelList" >
+        insert sys_role_menu_rel (role_id,menu_id) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.roleId},#{item.menuId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRoleMenuRelByRoleId" parameterType="Long">
+        delete from sys_role_menu_rel where role_id = #{id}
+    </delete>
+    
+</mapper>
